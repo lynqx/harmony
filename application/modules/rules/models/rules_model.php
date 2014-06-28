@@ -13,6 +13,7 @@ class Rules_model extends CI_Model
         $this->load->model('Rule_model');
         $this->load->model('Result_set');
         $this->load->model('Rule_set');
+        $this->load->model('permissions/User_model');
     }
 
     public function checkRuleExists($ruleId)
@@ -112,8 +113,15 @@ class Rules_model extends CI_Model
                     $result=$query->row();
                     //tokenize the resulting value data
                     $settings=$this->_tokenizeBy3Colons($result->value);
+                    //push the id parameter to the end of the array. This means I need the currently signed in user
+                    //gets the currentUser - Currently works for just self service
+                    //TODO: Add implementation for when self service is turned off
+                    $user_model=new User_model();
+                    $user=$user_model->getCurrentUser();
+                    $settings[]=$user->Id;
                     return $settings;
                 }
+                else return null;
                 break;
             case CONTRIBUTION_CATEGORY:
                 $this->db->select('key,value')
@@ -126,8 +134,15 @@ class Rules_model extends CI_Model
                     $result=$query->row();
                     //tokenize the resulting value data
                     $settings=$this->_tokenizeBy3Colons($result->value);
+                    //push the id parameter to the end of the array. This means I need the currently signed in user
+                    //gets the currentUser - Currently works for just self service
+                    //TODO: Add implementation for when self service is turned off
+                    $user_model=new User_model();
+                    $user=$user_model->getCurrentUser();
+                    $settings[]=$user->Id;
                     return $settings;
                 }
+                 else return null;
                 break;
 
         }

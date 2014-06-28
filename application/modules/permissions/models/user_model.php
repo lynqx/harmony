@@ -228,7 +228,7 @@ class User_model extends CI_Model
      * @param $role
      * @return mixed
      */
-    function addUserToRole($userId, $role)
+    public function addUserToRole($userId, $role)
     {
         //TODO: Just insert the userId and roleId
         $insert_data = array(
@@ -243,7 +243,7 @@ class User_model extends CI_Model
      * @param string $role
      * @return array | User_model
      */
-    function getUsers($role = 'admin')
+    public function getUsers($role = 'admin')
     {
         $user_array = array();
         $query = 'SELECT users.id,users.username FROM users JOIN user_roles ON users.id=user_roles.user_id JOIN roles ON user_roles.role_id=roles.id WHERE roles.title=?';
@@ -267,7 +267,13 @@ class User_model extends CI_Model
         return $user_array;
     }
 
-    function changePassword($old, $new, $userId)
+    /**
+     * @param $old
+     * @param $new
+     * @param $userId
+     * @return bool
+     */
+    public function changePassword($old, $new, $userId)
     {
         try {
             //TODO: Accept old pass, new password and user ID
@@ -292,5 +298,18 @@ class User_model extends CI_Model
         } catch (Exception $ex) {
             return false;
         }
+    }
+
+    /**
+     * @return bool|null|User_model
+     */
+    public function getCurrentUser()
+    {
+        if($this->session->userdata('username'))
+        {
+            $username=$this->session->userdata('username');
+            return $this->get_by_username($username);
+        }
+        else return null;
     }
 }

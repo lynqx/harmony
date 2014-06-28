@@ -19,6 +19,6 @@ class Rules extends MX_Controller{
     }
     public function GetRules($category,$rule_id)
     {
-
+        //Hold on still testing the models
     }
 }
