@@ -36,6 +36,17 @@ define('FOPEN_READ_WRITE_CREATE',				'a+b');
 define('FOPEN_WRITE_CREATE_STRICT',				'xb');
 define('FOPEN_READ_WRITE_CREATE_STRICT',		'x+b');
 
+/*
+ * Armony Constants
+ */
+define('RULE_SETTINGS_DELIMITER',':::'); //The delimiter for rule settings splitter
+define('LOANS_TABLE','');
+define('LOANS_SETTINGS_TABLE','loans_settings');
+define('CONTRIBUTIONS_TABLE','contributions');
+define('CONTRIBUTIONS_SETTINGS_TABLE','contributions_settings');
+define('CONTRIBUTION_CATEGORY','contribution');
+define('LOAN_CATEGORY','loan');
+define('RULE_SETTINGS_TABLE','rules_settings');
 
 /* End of file constants.php */
 /* Location: ./application/config/constants.php */
