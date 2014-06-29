@@ -21,7 +21,7 @@ CREATE TABLE contributions_rules
 CREATE TABLE contributions_settings
 (
     id INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
-    contribution_id INT NOT NULL,
+    contribution_id INT UNSIGNED NOT NULL,
     rule_id INT NOT NULL,
     `key` VARCHAR(150) NOT NULL,
     value VARCHAR(150) NOT NULL,
@@ -167,7 +167,7 @@ CREATE TABLE settings
 CREATE TABLE transaction_types
 (
     id INT UNSIGNED PRIMARY KEY NOT NULL AUTO_INCREMENT,
-    name VARCHAR(20),
+    name VARCHAR(20) NOT NULL,
     description VARCHAR(500),
     date_created TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL
 );
@@ -218,7 +218,9 @@ CREATE TABLE users_permissions
     permissionsTitle VARCHAR(255) NOT NULL
 );
 ALTER TABLE contributions_rules ADD FOREIGN KEY ( contribution_id ) REFERENCES contributions ( id ) ON DELETE CASCADE ON UPDATE CASCADE;
-ALTER TABLE contributions_rules ADD FOREIGN KEY ( rule_id ) REFERENCES loans ( id ) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE contributions_rules ADD FOREIGN KEY ( rule_id ) REFERENCES rules ( id ) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE contributions_settings ADD FOREIGN KEY ( rule_id ) REFERENCES rules ( id ) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE contributions_settings ADD FOREIGN KEY ( contribution_id ) REFERENCES contributions ( id ) ON DELETE CASCADE ON UPDATE CASCADE;
 CREATE UNIQUE INDEX unique_id ON contributions_settings ( id );
 CREATE UNIQUE INDEX unique_key ON contributions_settings ( `key` );
 ALTER TABLE cooperators ADD FOREIGN KEY ( user_id ) REFERENCES users ( id ) ON DELETE CASCADE ON UPDATE CASCADE;
@@ -238,6 +240,8 @@ ALTER TABLE roles_permissions ADD FOREIGN KEY ( role_id ) REFERENCES roles ( id 
 ALTER TABLE rule_definitions ADD FOREIGN KEY ( rule_id ) REFERENCES rules ( id );
 ALTER TABLE rules_settings ADD FOREIGN KEY ( rule_id ) REFERENCES rules ( id ) ON DELETE CASCADE ON UPDATE CASCADE;
 CREATE UNIQUE INDEX `key` ON rules_settings ( `key` );
+CREATE UNIQUE INDEX name ON transaction_types ( name );
+ALTER TABLE transactions ADD FOREIGN KEY ( transaction_type ) REFERENCES transaction_types ( name ) ON DELETE CASCADE ON UPDATE CASCADE;
 ALTER TABLE transactions ADD FOREIGN KEY ( contribution_id ) REFERENCES contributions ( id ) ON DELETE CASCADE ON UPDATE CASCADE;
 ALTER TABLE transactions ADD FOREIGN KEY ( cooperator_id ) REFERENCES cooperators ( id ) ON DELETE CASCADE ON UPDATE CASCADE;
 ALTER TABLE transactions ADD FOREIGN KEY ( loan_id ) REFERENCES loans ( id ) ON DELETE CASCADE ON UPDATE CASCADE;

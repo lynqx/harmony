@@ -69,12 +69,15 @@ class Rules_model extends CI_Model
             //Create a resultSet
             $resultSet = new Result_set();
             $rule_set=$ruleSet->getRuleSet(); //get all the queried rules
+            //Get the current user because the following query would require userId irrespective of the absence of settings
+            $user_model=new User_model();
+            $user=$user_model->getCurrentUser(); //TODO: Seek alternate means to suppose admin powered operations
             foreach ($rule_set as $rule) {
 
                 $category=$rule->getCategory;
 
                 if (is_null($this->_checkRuleSettings($category,$rule->getRuleID))) {
-                    $query=$this->db->query($rule->rules_def);
+                    $query=$this->db->query($rule->rules_def,$user->Id);
                     $result=$query->row(); //expect to return a true or false value from script execution
                     $resultSet->addResultToSet($result);
                 }
