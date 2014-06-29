@@ -6,10 +6,10 @@ class TemplatesModel extends CI_Model {
 			function get_image() {
 				
 				$id = $this->session->userdata('id');
-			 // query userphoto db to get user image
-			if ( $query = $this->db->select('*')
-			->from('userphoto')
-			->where('id', $id)
+			 // query userphoto table to get user image
+			if ( $query = $this->db->select('image')
+			->from('cooperators')
+			->where('user_id', $id)
 			->limit(1) ) { 
 			$result['rows'] = $query->get()->result();	
 			return $result;	
@@ -22,7 +22,6 @@ class TemplatesModel extends CI_Model {
 			function get_role() {
 				
 				$id = $this->session->userdata('id');
-			 // query userphoto db to get user image
 			if ( $query = $this->db->select('*')
 			->from('user_roles')
 			->where('user_id', $id)

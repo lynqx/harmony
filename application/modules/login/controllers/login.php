@@ -51,6 +51,7 @@ class Login extends MX_Controller
                         //'user_level' => $row->user_level,
                         'email' => $row->email,
                         'address' => $row->address,
+                        'image' => $row->image,
                         'is_logged_in' => true,
                         //TODO: get the user's role using the username so that it gets stored in the session
                         'role' => modules::run('permissions/getUserRolePermissions', $row->username)->rolename

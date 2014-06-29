@@ -23,6 +23,7 @@
 
                 $firstname = $this->session->userdata('firstname');
                 $lastname = $this->session->userdata('lastname');
+                $image = $this->session->userdata('image');
                 $id = $this->session->userdata('id');
                 if ($id) {
 
@@ -42,10 +43,8 @@
                 ?></h6></div>
 
         <a href="#" title="" class="user">
-            <?php foreach ($photos as $photo) { ?>
-                <?php $image = $photo->image; ?>
+            
                 <img src=" <?php echo base_url(); ?>userphoto/<?php echo $image ?>" width="172" height="172"/>
-            <?php } ?>
         </a>
     </div>
 
@@ -64,18 +63,21 @@
         <ul class="body">
             <li><strong>
                     <?php // calling from templates controller ## function get all members
-                    echo $num_results;
+                    //echo $num_results;
+					echo 2105;
                     ?>
                 </strong>
             </li>
             <li><strong>
                     <?php // calling from templates controller ## function get all members
-                    echo $num_loans;
+                    //echo $num_loans; 
+					echo 23;
                     ?>
                 </strong></li>
             <li><strong>
                     <?php // calling from templates controller ## function get all members
-                    echo $num_assets;
+                    //echo $num_assets;
+					echo 531;
                     ?>
                 </strong></li>
         </ul>

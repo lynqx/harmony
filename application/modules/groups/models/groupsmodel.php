@@ -168,7 +168,7 @@ class groupsmodel extends CI_Model
         $tmp = $query->get()->result();
         $result['num_rows'] = $tmp[0]->count;
         //actual results query
-        $query = $this->db->select('group_id, group_name')
+        $query = $this->db->select('id, name')
             ->from('groups');
         $result['rows'] = $query->get()->result();
 

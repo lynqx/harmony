@@ -72,7 +72,14 @@ class User_model extends CI_Model
     function get_by_username($username)
     {
         //TODO: use the username to search for a user and load additional information about that user
-        $query = $this->db->get_where('users', array('username' => $username), 1);
+       // $query = $this->db->get_where('users', array('username' => $username), 1);
+	   
+		$this->db->select('*');
+		$this->db->from('users');
+		$this->db->join('cooperators', 'cooperators.user_id = users.id');
+        $this->db->where(array('username' => $username), 1);
+		$query = $this->db->get();
+		
         $row = $query->result(); //Since we are expecting a  single result
         if (!empty($row)) {
             foreach ($query->result() as $row) {
@@ -83,11 +90,11 @@ class User_model extends CI_Model
                 $user->lastname = $row->lastname;
                 $user->datecreated = $row->date_created;
                 $user->state = $row->active;
-                $user->addressIndex = $row->address;
+               // $user->addressIndex = $row->address;
                 $user->username = $row->username;
                 $user->roles = $this->_initializeRoles($row->id); //Initialize the role with all permissions
                 $temp=$this->get_user_role($username);//Store this value temporarily
-                $user->rolename = $temp[0]->title; // grab the user's role name! Coolness!
+               // $user->rolename = $temp[0]->title; // grab the user's role name! Coolness!
 
                 /* //TODO: Get the current user and log this read action
                  $this->load->library('session');

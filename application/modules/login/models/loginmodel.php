@@ -18,16 +18,17 @@ class loginmodel extends CI_Model
     function validate()
 
     {
-
-        $this->db->where('username', $this->input->post('username'));
-        $this->db->where('passwd', SHA1($this->input->post('password')));
-        $this->db->where('active', 1);
-        $query = $this->db->get('users');
+			$this->db->select('UNIX_TIMESTAMP() - last_login AS TimeSent, users.id, firstname, lastname, username, email, phone_number, image, last_login, active');
+            $this->db->from('users');
+			$this->db->join('cooperators', 'cooperators.user_id = users.id');
+			$this->db->where('username', $this->input->post('username'));
+			$this->db->where('passwd', SHA1($this->input->post('password')));
+			$this->db->where('active', 1);
+			$query =  $this->db->get();
 
         if ($query->num_rows == 1) {
 
             return $query;
-
         }
 
     }

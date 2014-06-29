@@ -12,10 +12,11 @@ if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 		$images = $this->templatesmodel->get_image();
        	$data['photos'] = $images['rows'];
 		
-		// to select user role
+		 //to select user role
 		$sub = $this->templatesmodel->get_role();
        	$data['roles'] = $sub['rows'];
 		
+		/*
 		// to get coperator's contribution balance
 		$bal = $this->templatesmodel->get_balance();
        	$data['balances'] = $bal['rows'];
@@ -34,7 +35,7 @@ if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 		$results = $this->templatesmodel->get_active_asset_loans();
         $data['num_assets'] = $results['num_rows'];
 		//end: side bar members overview
-
+*/
 		//begin: to get menu for features in sidebar
             $menu = $this->templatesmodel->get_menu();
 
@@ -89,6 +90,8 @@ if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 		
 		
 		}
+		
+		
 
 
 
