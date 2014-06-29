@@ -28,15 +28,16 @@ class viewusersmodel extends CI_Model
     {
 
         //actual results query
-        $query = $this->db->select('UNIX_TIMESTAMP() - last_login AS TimeSent, member_id, firstname, lastname, username, email, mobile, last_login, active')
-            ->from('members')
+        $query = $this->db->select('UNIX_TIMESTAMP() - last_login AS TimeSent, users.id, firstname, lastname, username, email, phone_number, last_login, active')
+            ->from('users')
+			->join('cooperators', 'cooperators.user_id = users.id')
             ->where('active', 0)
             ->limit($limit, $offset);
         $result['rows'] = $query->get()->result();
 
         // count query
         $query = $this->db->select('COUNT(*) as count', FALSE)
-            ->from('members')
+            ->from('users')
             ->where('active', 0);
         $tmp = $query->get()->result();
         $result['num_rows'] = $tmp[0]->count;

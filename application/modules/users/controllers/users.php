@@ -8,9 +8,11 @@ class Users extends MX_Controller
     {
         parent::__construct();
         //Modules::run('login/is_logged_in');
+		$this->load->model('userviewmodel', 'userview');
+
     }
 
-    function index($offset = 0)
+    function viewall($offset = 0)
     {
         $limit = 20;
 
@@ -107,6 +109,37 @@ class Users extends MX_Controller
     }
 	
 	
+	public function view($update_id)
+				{
+						
+		$update_id = $this->uri->segment(3);
+		
+		if (!isset($update_id)) {
+			$update_id = $this->input->post('update_id', $id);
+			}
+		
+		if (is_numeric($update_id)) {
+			//$data = $this->get_member_data_from_db($update_id);
+			$data = $this->userview->get_user($update_id);
+			$data['update_id'] = $update_id;
+			} else {
+			$data = $this->get_data_from_post();
+				}
+							
+					$firstname = $data['firstname'];
+					$lastname = $data['lastname'];
+					$image = $data['image'];
+					
+					
+
+                    $data['page_title'] = $firstname. ' ' . $lastname;
+					$data['module'] = 'users';
+					$data['view_file'] = 'user_view';
+					
+					echo Modules::run('templates/main_site', $data);
+
+					
+	}
 
 
     function manageuser()
@@ -286,5 +319,7 @@ class Users extends MX_Controller
         $this->index();
 
     }
+	
+	
 
 }
