@@ -1,11 +1,6 @@
-<?php
-			$data = $this->session->flashdata('result');
-			if (isset($data)) echo '<h6>' . $data . '</h6>';
-			?>
 
-<h5 class="widget-name"><i class="icon-th-list"></i>OVERVIEW - <?php 
-	if (isset($firstname) && isset($lastname))
-	echo $firstname . " " . $lastname; ?></h5>
+
+<h5 class="widget-name"><i class="icon-th-list"></i>My Profile- <?php echo $firstname . " " . $lastname; ?></h5>
 
 
 
@@ -23,11 +18,26 @@
 	                            <div class="tab-content">
 	                                <div class="tab-pane active fade in" id="tab5">
                                <?php $base_url = base_url(); ?>
-                               
-							   
-		<?php if ($image) { ?>
-		<?php
-        
+		<?php foreach ($photos as $photo) { ?>
+		<?php $image = $photo->image;  ?>
+        <?php if ($photo->image == "") { 
+
+
+
+					echo '<div class="media row-fluid">';
+					echo '<div class="span3">';
+					echo '<div class="widget">';
+						echo '<div class="well">';
+						    echo '<div class="view">';
+							?>
+					<?php echo '<img src="' . $base_url . 'userphoto/default.jpg" alt="" />'; ?>
+							    </div>
+						    </div>
+						</div>
+                     </div>
+                  </div>
+                  
+<?php		} else {
 				echo '<div class="media row-fluid">';
 					echo '<div class="span3">';
 					echo '<div class="widget">';
@@ -41,23 +51,7 @@
 						</div>
                      </div>
                   </div>
-                 <?php  } else {
-					 //no image returned
-					 
-					echo '<div class="media row-fluid">';
-					echo '<div class="span3">';
-					echo '<div class="widget">';
-						echo '<div class="well">';
-						    echo '<div class="view">';
-							?>
-					<?php echo '<a class="view-back lightbox"></a>';
-					echo '<img src="' . $base_url . 'userphoto/default.png" alt="" />'; ?>
-							    </div>
-						    </div>
-						</div>
-                     </div>
-                  </div>
-					<?php  }?>
+                 <?php  } }?>
                   
                   
                    <!-- Table with toolbar -->
@@ -100,7 +94,7 @@
                               
                               <tr>
                                   <td width="250"><strong>Mobile</strong></td>
-                                  <td><?php echo $phone_number; ?></td>
+                                  <td><?php echo $mobile; ?></td>
                               </tr>
                                                            
                           </tbody>
@@ -133,13 +127,28 @@
                         <table class="table table-bordered table-checks">
                           <tbody>
                               <tr>
-                                  <td width="250"><strong>Contact Address</strong></td>
-                                  <td><?php echo $home_address; ?></td>
+                                  <td width="250"><strong>Address Line 1</strong></td>
+                                  <td><?php echo $addressline1; ?></td>
+                              </tr>
+                              
+                              <tr>
+                                  <td width="250"><strong>Address Line 2</strong></td>
+                                  <td><?php echo $addressline2; ?></td>
                               </tr>
                               
                               <tr>
                                   <td width="250"><strong>City</strong></td>
-                                  <td><?php echo $home_town; ?></td>
+                                  <td><?php echo $city; ?></td>
+                              </tr>
+                              
+                              <tr>
+                                  <td width="250"><strong>State</strong></td>
+                                  <td><?php echo $state; ?></td>
+                              </tr>
+                              
+                              <tr>
+                                  <td width="250"><strong>Country</strong></td>
+                                  <td><?php echo $country; ?></td>
                               </tr>
                               
                           </tbody>
@@ -153,11 +162,11 @@
                                                             </div>
 
                         <div class="tab-pane fade" id="tab6">
-						<h4> Edit Users Information </h4>
+						<h4> Update Information </h4>
                                     <?php echo validation_errors('<p class="error" style="color:#F00">'); ?>
 
 
-<form action="<?php echo base_url() ?>users/update" method="post"
+<form action="<?php echo base_url() ?>userview/updateprofile" method="post"
       enctype="multipart/form-data" name="form" id="form1" onSubmit="return validateForm()">
 
 <div class="widget">
@@ -202,7 +211,7 @@
                                                 <span style="color:#F00">*</span>
                                             </span>
             <input type="text" name="mobile" placeholder="Mobile Number" id="mobile"
-                   onkeypress="return isNumberKey(event)" value="<?php echo $phone_number; ?>" />
+                   onkeypress="return isNumberKey(event)" value="<?php echo $mobile; ?>" />
         </div>
     </div>
 </div>
@@ -230,7 +239,7 @@
                                             <span style="color:#F00">*</span>
                                             <i class="ico-home"></i>
                                             </span>
-            <input id="prependedInput" type="text" name="homeaddress" placeholder="Home Address" value="<?php echo $home_address; ?>"/>
+            <input id="prependedInput" type="text" name="addressline1" placeholder="Address Line 1" value="<?php echo $addressline1; ?>"/>
         </div>
     </div>
 </div>
@@ -241,12 +250,43 @@
                                             <span style="color:#F00">*</span>
                                             <i class="ico-home"></i>
                                             </span>
-            <input id="prependedInput" type="text" name="hometown" placeholder="Home Town" value="<?php echo $home_town; ?>" />
+            <input id="prependedInput" type="text" name="addressline2" placeholder="Address Line 2" value="<?php echo $addressline2; ?>" />
         </div>
     </div>
 </div>
-
-
+<div class="control-group">
+    <div class="controls">
+        <div class="input-prepend">
+						            		<span class="add-on">
+                                            <span style="color:#F00">*</span>
+                                            <i class="ico-home"></i>
+                                            </span>
+            <input id="prependedInput" type="text" name="city" placeholder="City" value="<?php echo $city; ?>" />
+        </div>
+    </div>
+</div>
+<div class="control-group">
+    <div class="controls">
+        <div class="input-prepend">
+						            		<span class="add-on">
+                                            <span style="color:#F00">*</span>
+                                            <i class="ico-home"></i>
+                                            </span>
+            <input id="prependedInput" type="text" name="state" placeholder="State" value="<?php echo $state; ?>"  />
+        </div>
+    </div>
+</div>
+<div class="control-group">
+    <div class="controls">
+        <div class="input-prepend">
+						            		<span class="add-on">
+                                            <span style="color:#F00">*</span>
+                                            <i class="ico-home"></i>
+                                            </span>
+            <input id="prependedInput" type="text" name="country" placeholder="Country" value="<?php echo $country; ?>"  />
+        </div>
+    </div>
+</div>
 <!-- Login Information Group -->
 <div class="navbar">
     <div class="navbar-inner"><h6>Login Information</h6></div>
@@ -262,7 +302,7 @@
                                             <span style="color:#F00">*</span>
                                             <i class="ico-user"></i>
                                             </span>
-            <input id="prependedInput" type="text" name="username" placeholder="Username" value="<?php echo $username; ?>" readonly />
+            <input id="prependedInput" type="text" name="username" placeholder="Username" value="<?php echo $username; ?>" />
         </div>
     </div>
 

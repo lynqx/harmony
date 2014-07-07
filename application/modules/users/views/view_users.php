@@ -86,7 +86,7 @@
                                         
                           
                           <td> 
-						  <?php echo'<a href="userview/view/'. $id . '" class="btn btn-info tip" title="View"><i class="icon-zoom-in"></i></a>'; ?>
+						  <?php echo'<a href="view/'. $id . '" class="btn btn-info tip" title="View"><i class="icon-zoom-in"></i></a>'; ?>
 						  </td>
                          
                           <td> 

@@ -8,7 +8,7 @@
 
 
 <!-- Login Form -->
-	                    <form action="<?php echo base_url(); ?>login/updatepwd" method="post">
+	                    <form action="<?php echo base_url(); ?>users/updatepwd" method="post">
 	                    	<div class="widget">
 	                            <div class="navbar"><div class="navbar-inner"><h6>Change Password</h6></div></div>
 

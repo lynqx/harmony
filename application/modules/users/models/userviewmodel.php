@@ -66,7 +66,7 @@ class userviewmodel extends CI_Model
     }
 
 
-    public function update_user($update_id, $data)
+    public function update_cooperator($update_id, $data)
     {
 
         // generate date the content was updated
@@ -77,14 +77,15 @@ class userviewmodel extends CI_Model
         $data = array(
             'firstname' => $this->input->post('firstname'),
             'lastname' => $this->input->post('lastname'),
-            'mobile' => $this->input->post('mobile'),
+            'phone_number' => $this->input->post('mobile'),
             'email' => $this->input->post('email'),
-            'username' => $this->input->post('username')
+            'home_address' => $this->input->post('homeaddress'),
+            'home_town' => $this->input->post('hometown'),
             // 'updated' => 1
         );
 
-        $this->db->where('member_id', $update_id);
-        $this->db->update('members', $data);
+        $this->db->where('user_id', $update_id);
+        $this->db->update('cooperators', $data);
 
     }
 
