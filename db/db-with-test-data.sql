@@ -29,6 +29,61 @@ DELETE FROM `admin_actions`;
 /*!40000 ALTER TABLE `admin_actions` ENABLE KEYS */;
 
 
+-- Dumping structure for table armony.basicsettings
+CREATE TABLE IF NOT EXISTS `basicsettings` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `companyname` varchar(255) DEFAULT NULL,
+  `shortname` varchar(255) DEFAULT NULL,
+  `address` varchar(255) DEFAULT NULL,
+  `phone` varchar(255) DEFAULT NULL,
+  `email` varchar(255) DEFAULT NULL,
+  `monthEndDay` int(11) NOT NULL,
+  `yearEndMonth` varchar(255) DEFAULT NULL,
+  `monthlyReports` varchar(255) DEFAULT NULL,
+  `monthlyReportsFolder` varchar(255) DEFAULT NULL,
+  `minSavingAmount` double NOT NULL,
+  `rescheduleDateLimit` int(11) NOT NULL,
+  `interestSavings` double NOT NULL,
+  `adminWithdrawCharge` bit(1) NOT NULL,
+  `adminWithdrawChargeFixed` bit(1) NOT NULL,
+  `adminWithdrawChargeAmount` double NOT NULL,
+  `registrationFee` double NOT NULL,
+  `showWelcomePopup` bit(1) NOT NULL,
+  `lockMonthEnd` bit(1) DEFAULT NULL,
+  `salariesFileLoaded` bit(1) DEFAULT NULL,
+  `enableInvAcc` bit(1) DEFAULT NULL,
+  `last_update` varchar(25) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+
+-- Dumping data for table armony.basicsettings: ~0 rows (approximately)
+DELETE FROM `basicsettings`;
+/*!40000 ALTER TABLE `basicsettings` DISABLE KEYS */;
+INSERT INTO `basicsettings` (`id`, `companyname`, `shortname`, `address`, `phone`, `email`, `monthEndDay`, `yearEndMonth`, `monthlyReports`, `monthlyReportsFolder`, `minSavingAmount`, `rescheduleDateLimit`, `interestSavings`, `adminWithdrawCharge`, `adminWithdrawChargeFixed`, `adminWithdrawChargeAmount`, `registrationFee`, `showWelcomePopup`, `lockMonthEnd`, `salariesFileLoaded`, `enableInvAcc`, `last_update`) VALUES
+	(1, 'Armony CTCS Worldwide Portal', 'MEMCOS', 'Iyana Sasa, Ibadan Nigeria', '0900000000', 'memcos@memcos.com', 0, NULL, NULL, NULL, 5000, 5, 20, b'1', b'1', 10, 0, b'1', NULL, NULL, NULL, '2014/02/08 09:33 pm');
+/*!40000 ALTER TABLE `basicsettings` ENABLE KEYS */;
+
+
+-- Dumping structure for table armony.categories
+CREATE TABLE IF NOT EXISTS `categories` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `title` varchar(50) NOT NULL,
+  `date_created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `code` varchar(100) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `code` (`code`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+
+-- Dumping data for table armony.categories: ~3 rows (approximately)
+DELETE FROM `categories`;
+/*!40000 ALTER TABLE `categories` DISABLE KEYS */;
+INSERT INTO `categories` (`id`, `title`, `date_created`, `code`) VALUES
+	(1, 'Membership Requirements', '2014-07-08 15:18:48', 'membership'),
+	(2, 'Groups or Loans participation requirement', '2014-07-08 15:19:02', 'groups_participation'),
+	(3, 'Financial Requirements', '2014-07-08 15:19:10', 'financial_requirements');
+/*!40000 ALTER TABLE `categories` ENABLE KEYS */;
+
+
 -- Dumping structure for table armony.contributions
 CREATE TABLE IF NOT EXISTS `contributions` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -39,32 +94,32 @@ CREATE TABLE IF NOT EXISTS `contributions` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
 
--- Dumping data for table armony.contributions: ~0 rows (approximately)
+-- Dumping data for table armony.contributions: ~1 rows (approximately)
 DELETE FROM `contributions`;
 /*!40000 ALTER TABLE `contributions` DISABLE KEYS */;
 INSERT INTO `contributions` (`id`, `name`, `description`, `date_created`, `status`) VALUES
-	(1, 'First savings contributions', 'Just a sample for testing', '2014-06-29 12:23:06', 'active');
+	(1, 'First Contribution', 'A test first contribution', '2014-07-06 10:10:26', 'active');
 /*!40000 ALTER TABLE `contributions` ENABLE KEYS */;
 
 
 -- Dumping structure for table armony.contributions_rules
 CREATE TABLE IF NOT EXISTS `contributions_rules` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `rule_id` int(11) NOT NULL,
   `contribution_id` int(10) unsigned NOT NULL,
+  `rule_title` varchar(150) NOT NULL,
+  `category_code` varchar(100) NOT NULL,
   PRIMARY KEY (`id`),
-  KEY `FK_rules_contrib_fk01` (`rule_id`),
-  KEY `FK_contrib_rules_fk02` (`contribution_id`),
-  CONSTRAINT `FK_contrib_rules_fk02` FOREIGN KEY (`contribution_id`) REFERENCES `contributions` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `FK_rules_contrib_fk01` FOREIGN KEY (`rule_id`) REFERENCES `rules` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=latin1;
+  KEY `contribution_id` (`contribution_id`),
+  KEY `rule_title` (`rule_title`),
+  CONSTRAINT `contributions_rules_ibfk_1` FOREIGN KEY (`contribution_id`) REFERENCES `contributions` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `contributions_rules_ibfk_2` FOREIGN KEY (`rule_title`) REFERENCES `rules` (`title`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
 
--- Dumping data for table armony.contributions_rules: ~2 rows (approximately)
+-- Dumping data for table armony.contributions_rules: ~1 rows (approximately)
 DELETE FROM `contributions_rules`;
 /*!40000 ALTER TABLE `contributions_rules` DISABLE KEYS */;
-INSERT INTO `contributions_rules` (`id`, `rule_id`, `contribution_id`) VALUES
-	(5, 1, 1),
-	(7, 2, 1);
+INSERT INTO `contributions_rules` (`id`, `contribution_id`, `rule_title`, `category_code`) VALUES
+	(2, 1, 'user_balance_greater_than_amount', 'membership');
 /*!40000 ALTER TABLE `contributions_rules` ENABLE KEYS */;
 
 
@@ -72,24 +127,19 @@ INSERT INTO `contributions_rules` (`id`, `rule_id`, `contribution_id`) VALUES
 CREATE TABLE IF NOT EXISTS `contributions_settings` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `contribution_id` int(11) unsigned NOT NULL,
-  `rule_id` int(11) NOT NULL,
-  `key` varchar(150) NOT NULL,
   `value` varchar(150) NOT NULL,
   `date_created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   UNIQUE KEY `unique_id` (`id`),
-  UNIQUE KEY `unique_key` (`key`),
-  KEY `FK_contributions_settings_fk01` (`contribution_id`),
-  KEY `FK_contributions_rules_fk05` (`rule_id`),
-  CONSTRAINT `FK_contributions_rules_fk05` FOREIGN KEY (`rule_id`) REFERENCES `rules` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `FK_contributions_settings_fk01` FOREIGN KEY (`contribution_id`) REFERENCES `contributions` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+  KEY `FK_contribution_id` (`contribution_id`),
+  CONSTRAINT `FK_contribution_id` FOREIGN KEY (`contribution_id`) REFERENCES `contributions` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
 
 -- Dumping data for table armony.contributions_settings: ~1 rows (approximately)
 DELETE FROM `contributions_settings`;
 /*!40000 ALTER TABLE `contributions_settings` DISABLE KEYS */;
-INSERT INTO `contributions_settings` (`id`, `contribution_id`, `rule_id`, `key`, `value`, `date_created`) VALUES
-	(2, 1, 2, 'contribution-value', '20000', '2014-06-29 21:46:58');
+INSERT INTO `contributions_settings` (`id`, `contribution_id`, `value`, `date_created`) VALUES
+	(1, 1, '1:::15000', '2014-07-06 10:27:34');
 /*!40000 ALTER TABLE `contributions_settings` ENABLE KEYS */;
 
 
@@ -109,22 +159,23 @@ CREATE TABLE IF NOT EXISTS `cooperators` (
   `date_approved` datetime NOT NULL,
   `home_address` varchar(100) NOT NULL,
   `home_town` varchar(100) NOT NULL,
+  `image` varchar(256) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `user_id` (`user_id`),
   CONSTRAINT `cooperators_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
 
--- Dumping data for table armony.cooperators: ~1 rows (approximately)
+-- Dumping data for table armony.cooperators: ~0 rows (approximately)
 DELETE FROM `cooperators`;
 /*!40000 ALTER TABLE `cooperators` DISABLE KEYS */;
-INSERT INTO `cooperators` (`id`, `user_id`, `employee_id`, `firstname`, `lastname`, `email`, `date_created`, `phone_number`, `gender`, `branch`, `date_joined_company`, `date_approved`, `home_address`, `home_town`) VALUES
-	(1, 1, 'oi009jjkl', 'Samuel', 'Okoroafor', 'samuel.okoroafor@gems3nigeria.com', '2014-06-29 12:23:56', '08184474987', 'male', 'Lokoja', '2014-06-29 12:24:16', '2014-06-29 12:24:17', 'Somewhere in Lokoja', 'ohaozara');
+INSERT INTO `cooperators` (`id`, `user_id`, `employee_id`, `firstname`, `lastname`, `email`, `date_created`, `phone_number`, `gender`, `branch`, `date_joined_company`, `date_approved`, `home_address`, `home_town`, `image`) VALUES
+	(1, 1, '00001', 'Omomoh', 'Alabi', 'admin@harmony.com', '2014-06-29 20:27:30', '08063777394', 'male', 'whatever', '2014-06-26 00:00:00', '2014-06-27 00:00:00', 'Ibadan', 'Gombe', 'avatar.png');
 /*!40000 ALTER TABLE `cooperators` ENABLE KEYS */;
 
 
 -- Dumping structure for table armony.cooperators_bank_accounts
 CREATE TABLE IF NOT EXISTS `cooperators_bank_accounts` (
-  `id` int(11) NOT NULL,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `cooperator_id` int(11) NOT NULL,
   `bank` varchar(50) NOT NULL,
   `acount_name` varchar(70) NOT NULL,
@@ -152,19 +203,19 @@ CREATE TABLE IF NOT EXISTS `cooperators_contributions` (
   KEY `cooperator_id` (`cooperator_id`),
   CONSTRAINT `cooperators_contributions_ibfk_1` FOREIGN KEY (`contribution_id`) REFERENCES `contributions` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `cooperators_contributions_ibfk_2` FOREIGN KEY (`cooperator_id`) REFERENCES `cooperators` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
 
 -- Dumping data for table armony.cooperators_contributions: ~1 rows (approximately)
 DELETE FROM `cooperators_contributions`;
 /*!40000 ALTER TABLE `cooperators_contributions` DISABLE KEYS */;
 INSERT INTO `cooperators_contributions` (`id`, `cooperator_id`, `contribution_id`, `date_created`) VALUES
-	(2, 1, 1, '2014-06-29 12:26:04');
+	(1, 1, 1, '2014-07-06 11:58:40');
 /*!40000 ALTER TABLE `cooperators_contributions` ENABLE KEYS */;
 
 
 -- Dumping structure for table armony.cooperators_groups
 CREATE TABLE IF NOT EXISTS `cooperators_groups` (
-  `id` int(11) NOT NULL,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `cooperator_id` int(11) NOT NULL,
   `group_id` int(11) NOT NULL,
   PRIMARY KEY (`id`),
@@ -206,36 +257,30 @@ CREATE TABLE IF NOT EXISTS `loans` (
   `description` varchar(500) DEFAULT NULL,
   `date_created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
--- Dumping data for table armony.loans: ~2 rows (approximately)
+-- Dumping data for table armony.loans: ~0 rows (approximately)
 DELETE FROM `loans`;
 /*!40000 ALTER TABLE `loans` DISABLE KEYS */;
-INSERT INTO `loans` (`id`, `name`, `description`, `date_created`) VALUES
-	(1, 'First Loan', 'This is a sample first loan', '2014-06-25 23:31:43'),
-	(2, 'Second Loan', 'This is a sample second oan', '2014-06-25 23:32:04');
 /*!40000 ALTER TABLE `loans` ENABLE KEYS */;
 
 
 -- Dumping structure for table armony.loans_rules
 CREATE TABLE IF NOT EXISTS `loans_rules` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `rule_id` int(11) NOT NULL,
+  `rule_title` varchar(150) NOT NULL,
   `loan_id` int(11) NOT NULL,
   `date_created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   KEY `loan_id` (`loan_id`),
-  KEY `rule_id` (`rule_id`),
+  KEY `loans_rules_ibfk_2` (`rule_title`),
   CONSTRAINT `loans_rules_ibfk_1` FOREIGN KEY (`loan_id`) REFERENCES `loans` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `loans_rules_ibfk_2` FOREIGN KEY (`rule_id`) REFERENCES `rules` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+  CONSTRAINT `loans_rules_ibfk_2` FOREIGN KEY (`rule_title`) REFERENCES `rules` (`title`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
--- Dumping data for table armony.loans_rules: ~2 rows (approximately)
+-- Dumping data for table armony.loans_rules: ~0 rows (approximately)
 DELETE FROM `loans_rules`;
 /*!40000 ALTER TABLE `loans_rules` DISABLE KEYS */;
-INSERT INTO `loans_rules` (`id`, `rule_id`, `loan_id`, `date_created`) VALUES
-	(1, 1, 1, '2014-06-28 22:36:49'),
-	(2, 2, 1, '2014-06-28 22:37:06');
 /*!40000 ALTER TABLE `loans_rules` ENABLE KEYS */;
 
 
@@ -243,22 +288,16 @@ INSERT INTO `loans_rules` (`id`, `rule_id`, `loan_id`, `date_created`) VALUES
 CREATE TABLE IF NOT EXISTS `loans_settings` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `loan_id` int(11) NOT NULL,
-  `br_id` int(11) NOT NULL,
-  `key` varchar(50) NOT NULL,
   `value` varchar(150) NOT NULL,
   `date_created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
-  KEY `br_id` (`br_id`),
   KEY `loan_id` (`loan_id`),
-  CONSTRAINT `loans_settings_ibfk_1` FOREIGN KEY (`br_id`) REFERENCES `rules` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `loans_settings_ibfk_2` FOREIGN KEY (`loan_id`) REFERENCES `loans` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
--- Dumping data for table armony.loans_settings: ~1 rows (approximately)
+-- Dumping data for table armony.loans_settings: ~0 rows (approximately)
 DELETE FROM `loans_settings`;
 /*!40000 ALTER TABLE `loans_settings` DISABLE KEYS */;
-INSERT INTO `loans_settings` (`id`, `loan_id`, `br_id`, `key`, `value`, `date_created`) VALUES
-	(1, 1, 2, 'loan_minimum_balance', '45000', '2014-06-29 13:28:45');
 /*!40000 ALTER TABLE `loans_settings` ENABLE KEYS */;
 
 
@@ -304,17 +343,21 @@ DELETE FROM `next_of_kin`;
 
 -- Dumping structure for table armony.permissions
 CREATE TABLE IF NOT EXISTS `permissions` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `title` varchar(255) NOT NULL,
-  `date_created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT 'The ID for available permissions',
+  `title` varchar(255) NOT NULL COMMENT 'The title for the permissions.e.g. Can Add New User',
+  `date_created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'The date of creation for the entry',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
 
--- Dumping data for table armony.permissions: ~0 rows (approximately)
+-- Dumping data for table armony.permissions: ~5 rows (approximately)
 DELETE FROM `permissions`;
 /*!40000 ALTER TABLE `permissions` DISABLE KEYS */;
 INSERT INTO `permissions` (`id`, `title`, `date_created`) VALUES
-	(1, 'canEditPassword', '2014-06-26 08:05:36');
+	(1, 'canUpdateProfile', '2014-01-22 07:56:15'),
+	(2, 'canReadDoc', '2014-01-25 18:11:28'),
+	(3, 'canViewAdmin', '2014-01-26 01:39:03'),
+	(4, 'canDoMemberTasks', '2014-01-30 17:37:21'),
+	(5, 'canViewMember', '2014-01-31 14:42:29');
 /*!40000 ALTER TABLE `permissions` ENABLE KEYS */;
 
 
@@ -330,7 +373,7 @@ CREATE TABLE IF NOT EXISTS `roles` (
 DELETE FROM `roles`;
 /*!40000 ALTER TABLE `roles` DISABLE KEYS */;
 INSERT INTO `roles` (`id`, `title`, `date_created`) VALUES
-	(1, 'admin', '2014-06-26 08:05:10');
+	(1, 'admin', '2014-06-29 20:37:49');
 /*!40000 ALTER TABLE `roles` ENABLE KEYS */;
 
 
@@ -340,17 +383,22 @@ CREATE TABLE IF NOT EXISTS `roles_permissions` (
   `role_id` int(10) unsigned NOT NULL,
   `permission_id` int(10) unsigned NOT NULL,
   PRIMARY KEY (`id`),
-  KEY `roles_permissions_ibfk_2` (`role_id`),
-  KEY `roles_permissions_ibfk_1` (`permission_id`),
-  CONSTRAINT `roles_permissions_ibfk_1` FOREIGN KEY (`permission_id`) REFERENCES `permissions` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `roles_permissions_ibfk_2` FOREIGN KEY (`role_id`) REFERENCES `roles` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+  KEY `role_id` (`role_id`),
+  KEY `permission_id` (`permission_id`),
+  CONSTRAINT `roles_permissions_ibfk_2` FOREIGN KEY (`role_id`) REFERENCES `roles` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `roles_permissions_ibfk_3` FOREIGN KEY (`permission_id`) REFERENCES `permissions` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=latin1;
 
--- Dumping data for table armony.roles_permissions: ~0 rows (approximately)
+-- Dumping data for table armony.roles_permissions: ~6 rows (approximately)
 DELETE FROM `roles_permissions`;
 /*!40000 ALTER TABLE `roles_permissions` DISABLE KEYS */;
 INSERT INTO `roles_permissions` (`id`, `role_id`, `permission_id`) VALUES
-	(2, 1, 1);
+	(1, 1, 1),
+	(2, 1, 1),
+	(3, 1, 2),
+	(4, 1, 3),
+	(5, 1, 4),
+	(6, 1, 5);
 /*!40000 ALTER TABLE `roles_permissions` ENABLE KEYS */;
 
 
@@ -360,17 +408,37 @@ CREATE TABLE IF NOT EXISTS `rules` (
   `title` varchar(150) NOT NULL,
   `description` varchar(255) NOT NULL,
   `date_created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `title` (`title`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
 
--- Dumping data for table armony.rules: ~3 rows (approximately)
+-- Dumping data for table armony.rules: ~2 rows (approximately)
 DELETE FROM `rules`;
 /*!40000 ALTER TABLE `rules` DISABLE KEYS */;
 INSERT INTO `rules` (`id`, `title`, `description`, `date_created`) VALUES
-	(1, 'check-user-exists', 'This checks if a user exits', '2014-06-25 23:33:08'),
-	(2, 'loans-user-balance-must-be-greater-than-amount', 'This checks that the user\'s balance is great than a set amount in the settings for loan rules', '2014-06-25 23:35:06'),
-	(3, 'loans-user-balance-not-less-than-amount', 'This checks that the user\'s balance is not less than a specified amount', '2014-06-26 00:00:44');
+	(1, 'user_balance_greater_than_amount', 'The User\'s balance is greater than the speculated amount', '2014-07-05 22:52:31'),
+	(2, 'user_must_belong_to_a_specific_group', 'The User must belong to a specific group', '2014-07-08 20:05:42');
 /*!40000 ALTER TABLE `rules` ENABLE KEYS */;
+
+
+-- Dumping structure for table armony.rules_categories
+CREATE TABLE IF NOT EXISTS `rules_categories` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `rule_title` varchar(150) NOT NULL,
+  `category_code` varchar(100) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `FK_rules_categories_fk02` (`category_code`),
+  KEY `rule_title` (`rule_title`),
+  CONSTRAINT `FK_rules_categories_fk01` FOREIGN KEY (`rule_title`) REFERENCES `rules` (`title`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `FK_rules_categories_fk02` FOREIGN KEY (`category_code`) REFERENCES `categories` (`code`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1 COMMENT='This table maps rules to categories based on the general front end grouping';
+
+-- Dumping data for table armony.rules_categories: ~0 rows (approximately)
+DELETE FROM `rules_categories`;
+/*!40000 ALTER TABLE `rules_categories` DISABLE KEYS */;
+INSERT INTO `rules_categories` (`id`, `rule_title`, `category_code`) VALUES
+	(1, 'user_balance_greater_than_amount', 'membership');
+/*!40000 ALTER TABLE `rules_categories` ENABLE KEYS */;
 
 
 -- Dumping structure for table armony.rules_settings
@@ -381,8 +449,8 @@ CREATE TABLE IF NOT EXISTS `rules_settings` (
   `value` varchar(150) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `key` (`key`),
-  KEY `FK_rule_rule_settings_fk01` (`rule_id`),
-  CONSTRAINT `FK_rule_rule_settings_fk01` FOREIGN KEY (`rule_id`) REFERENCES `rules` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+  KEY `rule_id` (`rule_id`),
+  CONSTRAINT `rules_settings_ibfk_1` FOREIGN KEY (`rule_id`) REFERENCES `rules` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- Dumping data for table armony.rules_settings: ~0 rows (approximately)
@@ -395,18 +463,22 @@ DELETE FROM `rules_settings`;
 CREATE TABLE IF NOT EXISTS `rule_definitions` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `rule_id` int(11) DEFAULT NULL,
+  `rule_title` varchar(150) DEFAULT NULL,
   `rules_def` varchar(1500) DEFAULT NULL,
+  `require_settings` bit(1) DEFAULT NULL COMMENT 'This helps to know if a rule requires settings',
+  `date_created` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   KEY `rule_id` (`rule_id`),
-  CONSTRAINT `rule_definitions_ibfk_1` FOREIGN KEY (`rule_id`) REFERENCES `rules` (`id`)
+  KEY `rule_definitions_ibfk_2` (`rule_title`),
+  CONSTRAINT `rule_definitions_ibfk_2` FOREIGN KEY (`rule_title`) REFERENCES `rules` (`title`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
 
--- Dumping data for table armony.rule_definitions: ~1 rows (approximately)
+-- Dumping data for table armony.rule_definitions: ~2 rows (approximately)
 DELETE FROM `rule_definitions`;
 /*!40000 ALTER TABLE `rule_definitions` DISABLE KEYS */;
-INSERT INTO `rule_definitions` (`id`, `rule_id`, `rules_def`) VALUES
-	(1, 1, 'select if(count(*)>0,true,false) as vl from users where id=?'),
-	(2, 2, 'SELECT if(?>getUserBalance(?), false,true) as vl');
+INSERT INTO `rule_definitions` (`id`, `rule_id`, `rule_title`, `rules_def`, `require_settings`, `date_created`) VALUES
+	(1, 1, 'user_balance_greater_than_amount', 'select (getContributionBalance(?) > ? , true,false) as vl', b'1', '2014-07-08 18:56:52'),
+	(2, 2, 'user_must_belong_to_a_specific_group', NULL, NULL, '2014-07-08 20:07:32');
 /*!40000 ALTER TABLE `rule_definitions` ENABLE KEYS */;
 
 
@@ -424,6 +496,74 @@ DELETE FROM `settings`;
 /*!40000 ALTER TABLE `settings` ENABLE KEYS */;
 
 
+-- Dumping structure for table armony.sitelogo
+CREATE TABLE IF NOT EXISTS `sitelogo` (
+  `id` int(2) NOT NULL AUTO_INCREMENT,
+  `logo` varchar(64) NOT NULL,
+  `favicon` varchar(64) NOT NULL,
+  `date` varchar(25) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1 COMMENT='for the site wide logo and shortcut icon';
+
+-- Dumping data for table armony.sitelogo: ~0 rows (approximately)
+DELETE FROM `sitelogo`;
+/*!40000 ALTER TABLE `sitelogo` DISABLE KEYS */;
+INSERT INTO `sitelogo` (`id`, `logo`, `favicon`, `date`) VALUES
+	(1, 'knights.jpg', 'favicon.ico', '');
+/*!40000 ALTER TABLE `sitelogo` ENABLE KEYS */;
+
+
+-- Dumping structure for table armony.site_content
+CREATE TABLE IF NOT EXISTS `site_content` (
+  `content_id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT 'The ID for the site CMS contents',
+  `author_id` int(5) NOT NULL COMMENT 'id of the admin user who posted the content gotten from session data',
+  `title` varchar(550) DEFAULT NULL COMMENT 'The title for a page',
+  `alias` varchar(32) NOT NULL COMMENT 'required for display as links in the nav',
+  `slug` varchar(256) NOT NULL,
+  `content` longtext COMMENT 'The text content',
+  `published` varchar(32) NOT NULL,
+  `updated` int(2) NOT NULL DEFAULT '0',
+  `access` int(2) NOT NULL COMMENT 'to determine permissions and grant access',
+  `date_created` varchar(25) NOT NULL COMMENT 'The date of creation',
+  PRIMARY KEY (`content_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=latin1;
+
+-- Dumping data for table armony.site_content: ~7 rows (approximately)
+DELETE FROM `site_content`;
+/*!40000 ALTER TABLE `site_content` DISABLE KEYS */;
+INSERT INTO `site_content` (`content_id`, `author_id`, `title`, `alias`, `slug`, `content`, `published`, `updated`, `access`, `date_created`) VALUES
+	(1, 2, 'Membership Registration Procedures', 'How to Join', 'membership-registration-procedures', '<p>Membership registration is for serving employees of MTN Nigeria Communications Limited.</p>\n\n<p>Below is the <strong>three-step membership registration procedures</strong> for joining memcos:</p>\n\n <p >&nbsp; &nbsp;<img alt="" height="28" src="http://memcos.net/MEMCOSWeb/userfiles/image/buy.png"  width="36" />Pay the non-refundable Membership Registration Fee of N5,000.00 to any of MEMCOS bank accounts below with clear indication of your name as depositor:</p>\n\n<ol>\n  <li>1. GT Bank account : <font ><b>209/726569/110</b></font></li>\n  <li>2. Zenith Bank account : <font ><b>6012613503</b></font></li>\n</ol>\n\n<p>&nbsp;</p>\n\n<p>&nbsp;</p>\n\n <p >&nbsp; &nbsp;<img alt="" height="0" src="http://memcos.net/MEMCOSWeb/userfiles/image/buy.png"  width="0" />Fill the <b>online</b> Membership Registration Form accurately on the MEMCOS website, ensuring to submit the data in all fields.</p>\n\n<p>&nbsp;</p>\n\n <p >&nbsp; &nbsp;<img alt="" height="28" src="http://memcos.net/MEMCOSWeb/userfiles/image/buy.png"  width="36" />Print out a copy of the generated deduction form, append your signature and send together with a copy of your payment deposit slip to the MEMCOS Secretariat below:</p>\n\n <div align="center"  width="500">\n <p >The Manager,<br />\nMEMCOS Secretariat,<br />\n4, Aromire street,<br />\nIkoyi, Lagos.</p>\n</div>\n\n<p><br />\nYou will be contacted by MEMCOS after validation of the submitted data.</p>\n\n<table>\n <tbody>\n  <tr>\n   <td valign="top"><strong>NB:</strong></td>\n   <td valign="top">\n    <div >Exited employees of MTN Nigeria Communications Limited and former members of MEMCOS should contact the Secretariat for full information about their status.</div>\n   </td>\n  </tr>\n </tbody>\n</table>', '1', 0, 0, '2014/01/26 05:22 pm'),
+	(2, 2, 'About Us', 'About Us', 'about-us', '<p>About MEMCOS</p>', '1', 0, 0, '2014/01/26 05:28 pm'),
+	(3, 2, 'MEMCOS PRODUCTS', 'Products', 'memcos-products', '<p>This is the products page. Acessible to only members</p>', '1', 1, 2, '2014/01/26 05:38 pm'),
+	(4, 2, 'DOWNLOADS PAGE', 'Downloads', 'downloads-page', '<p>This is the download page</p>', '1', 0, 2, '2014/01/26 05:39 pm'),
+	(5, 2, 'EVENTS PAGE', 'Events', 'events-page', '<p>This is the events page and it has been editted</p>', '1', 1, 1, '2014/01/30 10:04 pm'),
+	(6, 2, 'HAAS LIST', 'Haas List', 'haas-list', '<p>HAAS List page. All pages are dynamically created</p>', '1', 0, 2, '2014/01/26 05:42 pm'),
+	(10, 20, 'Admin only', 'admin users', 'admin-only', '<p>This is for administrators only.</p>\r\n\r\n<p>&nbsp;</p>\r\n\r\n<p>Samuel take note!!!</p>', '1', 1, 2, '2014/01/31 03:37 am');
+/*!40000 ALTER TABLE `site_content` ENABLE KEYS */;
+
+
+-- Dumping structure for table armony.toggledisplay
+CREATE TABLE IF NOT EXISTS `toggledisplay` (
+  `id` int(2) NOT NULL AUTO_INCREMENT,
+  `logo` int(3) NOT NULL,
+  `sitename` int(2) NOT NULL,
+  `slogan` int(2) NOT NULL,
+  `footername` int(2) NOT NULL,
+  `favicon` int(2) NOT NULL,
+  `defaultlogo` int(2) NOT NULL,
+  `defaultfav` int(2) NOT NULL,
+  `date` varchar(25) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1 COMMENT='Toggle the display of the entire site';
+
+-- Dumping data for table armony.toggledisplay: ~0 rows (approximately)
+DELETE FROM `toggledisplay`;
+/*!40000 ALTER TABLE `toggledisplay` DISABLE KEYS */;
+INSERT INTO `toggledisplay` (`id`, `logo`, `sitename`, `slogan`, `footername`, `favicon`, `defaultlogo`, `defaultfav`, `date`) VALUES
+	(1, 1, 1, 0, 0, 1, 0, 0, '2014/02/28 09:39 pm');
+/*!40000 ALTER TABLE `toggledisplay` ENABLE KEYS */;
+
+
 -- Dumping structure for table armony.transactions
 CREATE TABLE IF NOT EXISTS `transactions` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -437,38 +577,34 @@ CREATE TABLE IF NOT EXISTS `transactions` (
   KEY `contribution_id` (`contribution_id`),
   KEY `cooperator_id` (`cooperator_id`),
   KEY `loan_id` (`loan_id`),
-  KEY `transactions_ibfk_4` (`transaction_type`),
-  CONSTRAINT `transactions_ibfk_4` FOREIGN KEY (`transaction_type`) REFERENCES `transaction_types` (`name`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `transactions_ibfk_1` FOREIGN KEY (`contribution_id`) REFERENCES `contributions` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `transactions_ibfk_2` FOREIGN KEY (`cooperator_id`) REFERENCES `cooperators` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `transactions_ibfk_3` FOREIGN KEY (`loan_id`) REFERENCES `loans` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
 
--- Dumping data for table armony.transactions: ~2 rows (approximately)
+-- Dumping data for table armony.transactions: ~1 rows (approximately)
 DELETE FROM `transactions`;
 /*!40000 ALTER TABLE `transactions` DISABLE KEYS */;
 INSERT INTO `transactions` (`id`, `transaction_type`, `amount`, `cooperator_id`, `loan_id`, `contribution_id`, `date_created`) VALUES
-	(1, 'loan', 50000, 1, 1, NULL, '2014-06-29 12:30:27'),
-	(3, 'contribution', 60000, 1, NULL, 1, '2014-06-29 12:31:17');
+	(1, 'contribution', 20000, 1, NULL, 1, '2014-07-06 10:09:16');
 /*!40000 ALTER TABLE `transactions` ENABLE KEYS */;
 
 
 -- Dumping structure for table armony.transaction_types
 CREATE TABLE IF NOT EXISTS `transaction_types` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `name` varchar(20) NOT NULL,
+  `name` varchar(20) DEFAULT NULL,
   `description` varchar(500) DEFAULT NULL,
   `date_created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `name` (`name`)
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
 
 -- Dumping data for table armony.transaction_types: ~2 rows (approximately)
 DELETE FROM `transaction_types`;
 /*!40000 ALTER TABLE `transaction_types` DISABLE KEYS */;
 INSERT INTO `transaction_types` (`id`, `name`, `description`, `date_created`) VALUES
-	(1, 'loan', 'Loan transaction type', '2014-06-29 12:26:35'),
-	(2, 'contribution', 'Contribution transaction type', '2014-06-29 12:27:26');
+	(1, 'contribution', 'Contributions transaction types', '2014-07-06 09:41:54'),
+	(2, 'loan', 'Loans transaction types', '2014-07-06 09:53:16');
 /*!40000 ALTER TABLE `transaction_types` ENABLE KEYS */;
 
 
@@ -478,16 +614,17 @@ CREATE TABLE IF NOT EXISTS `users` (
   `username` varchar(255) NOT NULL,
   `passwd` varchar(255) NOT NULL,
   `date_created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `active` bit(1) NOT NULL DEFAULT b'0',
+  `active` int(1) NOT NULL DEFAULT '0',
   `last_login` varchar(25) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
 
--- Dumping data for table armony.users: ~0 rows (approximately)
+-- Dumping data for table armony.users: ~2 rows (approximately)
 DELETE FROM `users`;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
 INSERT INTO `users` (`id`, `username`, `passwd`, `date_created`, `active`, `last_login`) VALUES
-	(1, 'schand', '5baa61e4c9b93f3f0682250b6cf8331b7ee68fd8', '2014-06-26 08:04:03', b'1', '2014-06-26 08:04:05');
+	(1, 'doubleakins', 'd033e22ae348aeb5660fc2140aec35850c4da997', '2014-06-29 20:03:27', 1, '1404071766'),
+	(2, 'schand', '5baa61e4c9b93f3f0682250b6cf8331b7ee68fd8', '2014-07-03 00:28:10', 1, '1404071766');
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 
 
@@ -497,13 +634,11 @@ CREATE TABLE IF NOT EXISTS `users_permissions` (
   `username` varchar(255) NOT NULL,
   `permissionsTitle` varchar(255) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- Dumping data for table armony.users_permissions: ~0 rows (approximately)
 DELETE FROM `users_permissions`;
 /*!40000 ALTER TABLE `users_permissions` DISABLE KEYS */;
-INSERT INTO `users_permissions` (`id`, `username`, `permissionsTitle`) VALUES
-	(1, 'schand', 'canEditPassword');
 /*!40000 ALTER TABLE `users_permissions` ENABLE KEYS */;
 
 
@@ -527,23 +662,29 @@ DELETE FROM `user_actions`;
 
 -- Dumping structure for table armony.user_messages
 CREATE TABLE IF NOT EXISTS `user_messages` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `sender_id` int(10) unsigned DEFAULT NULL,
-  `receipient_id` int(10) unsigned DEFAULT NULL,
-  `message_id` int(10) unsigned DEFAULT NULL,
-  `date_sent` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT 'Messages id',
+  `sender_id` int(10) unsigned DEFAULT NULL COMMENT 'The message sender',
+  `receipient_id` int(10) unsigned DEFAULT NULL COMMENT 'The receipient of the message',
+  `message_id` int(10) unsigned DEFAULT NULL COMMENT 'The message contents id from message table',
+  `state` varchar(20) NOT NULL COMMENT 'The state of the message',
+  `date_sent` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'The time the message was sent',
   PRIMARY KEY (`id`),
-  KEY `message_id` (`message_id`),
-  KEY `receipient_id` (`receipient_id`),
-  KEY `sender_id` (`sender_id`),
-  CONSTRAINT `user_messages_ibfk_1` FOREIGN KEY (`message_id`) REFERENCES `messages` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `user_messages_ibfk_2` FOREIGN KEY (`receipient_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `user_messages_ibfk_3` FOREIGN KEY (`sender_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  KEY `FK_user_sender_user_messages` (`sender_id`),
+  KEY `FK_user_reciever_user_messages` (`receipient_id`),
+  KEY `FK_message_user_messages` (`message_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=latin1;
 
--- Dumping data for table armony.user_messages: ~0 rows (approximately)
+-- Dumping data for table armony.user_messages: ~7 rows (approximately)
 DELETE FROM `user_messages`;
 /*!40000 ALTER TABLE `user_messages` DISABLE KEYS */;
+INSERT INTO `user_messages` (`id`, `sender_id`, `receipient_id`, `message_id`, `state`, `date_sent`) VALUES
+	(4, 8, 6, 4, 'sent', '2014-01-31 14:00:32'),
+	(5, 6, 5, 4, 'unread', '2014-01-31 15:36:08'),
+	(6, 5, 7, 5, 'sent', '2014-02-08 22:03:48'),
+	(7, 5, 7, 6, 'sent', '2014-02-08 22:04:28'),
+	(8, 7, 5, 7, 'sent', '2014-02-08 22:07:35'),
+	(9, 5, 7, 8, 'unread', '2014-02-08 22:27:31'),
+	(10, 5, 7, 9, 'unread', '2014-02-08 22:27:38');
 /*!40000 ALTER TABLE `user_messages` ENABLE KEYS */;
 
 
@@ -553,28 +694,38 @@ CREATE TABLE IF NOT EXISTS `user_roles` (
   `user_id` int(10) unsigned NOT NULL,
   `role_id` int(10) unsigned NOT NULL,
   PRIMARY KEY (`id`),
-  KEY `user_roles_ibfk_2` (`user_id`),
-  KEY `user_roles_ibfk_1` (`role_id`),
+  KEY `role_id` (`role_id`),
+  KEY `user_id` (`user_id`),
   CONSTRAINT `user_roles_ibfk_1` FOREIGN KEY (`role_id`) REFERENCES `roles` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `user_roles_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
 
--- Dumping data for table armony.user_roles: ~0 rows (approximately)
+-- Dumping data for table armony.user_roles: ~2 rows (approximately)
 DELETE FROM `user_roles`;
 /*!40000 ALTER TABLE `user_roles` DISABLE KEYS */;
 INSERT INTO `user_roles` (`id`, `user_id`, `role_id`) VALUES
-	(2, 1, 1);
+	(1, 1, 1),
+	(2, 2, 1);
 /*!40000 ALTER TABLE `user_roles` ENABLE KEYS */;
 
 
--- Dumping structure for function armony.getUserBalance
+-- Dumping structure for function armony.getContributionBalance
 DELIMITER //
-CREATE DEFINER=`root`@`localhost` FUNCTION `getUserBalance`(`userId` INT) RETURNS decimal(10,0)
-    DETERMINISTIC
+CREATE DEFINER=`root`@`localhost` FUNCTION `getContributionBalance`(`cooperatorId` INT) RETURNS decimal(10,0)
+    COMMENT 'Gets the balance of the implied cooperator'
 BEGIN
-DECLARE val DECIMAl;
-select amount from armony.transactions where cooperator_id=1 and transaction_type='contribution' into val;
-return val;
+declare contrib_amount decimal(10,0);
+select SUM(amount) as vl into contrib_amount from transactions where cooperator_id=cooperatorId and transaction_type='contribution';
+return contrib_amount;
+END//
+DELIMITER ;
+
+
+-- Dumping structure for function armony.userIsInGroup
+DELIMITER //
+CREATE DEFINER=`root`@`localhost` FUNCTION `userIsInGroup`(`UserId` INT, `groupID` INT) RETURNS bit(1)
+BEGIN
+return 0;
 END//
 DELIMITER ;
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
