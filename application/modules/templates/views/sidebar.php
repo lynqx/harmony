@@ -125,7 +125,7 @@
             <li><a href=" <?php echo $base_url; ?>deductions" title="">Deductions</a></li>
             <li><a href=" <?php echo $base_url; ?>contact/about" title="">About Us</a></li>
             <li><a href=" <?php echo $base_url; ?>contact" title="">Contact Us</a></li>
-            <li><a href=" <?php echo $base_url; ?>login/changepwd" title="">Change Password</a></li>
+            <li><a href=" <?php echo $base_url; ?>users/change" title="">Change Password</a></li>
 
         </ul>
     </li>

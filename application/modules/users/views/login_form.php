@@ -3,7 +3,7 @@
 <?php echo validation_errors('<p class="error" style="color:#F00">'); ?>
 <?php if (isset($error)) { echo '<p class="error" style="color:#F00">ERROR : ' . $error . ' 
 									<ul class="nav nav-pills">
-	                                 <li class="active"><a href="'. base_url(). 'forgotPwd"><i class="icon-info-sign"></i>Forgot Password</a></li>
+	                                 <li class="active"><a href="'. base_url(). 'users/recover"><i class="icon-info-sign"></i>Forgot Password</a></li>
                                      </ul>
 								  </p>'; }?>
 
@@ -25,7 +25,7 @@
             </div>
         </div>
         <div class="well">
-	                    <form action="<?php echo base_url(); ?>login/validate_credentials" method="post" name="form" id="form1" onSubmit = "return validateForm()">
+	                    <form action="<?php echo base_url(); ?>users/validate_credentials" method="post" name="form" id="form1" onSubmit = "return validateForm()">
                 <div class="control-group">
                     <label class="control-label">Username</label>
                     <div class="controls"><input class="span12" type="text" name="username" placeholder="username" /></div>

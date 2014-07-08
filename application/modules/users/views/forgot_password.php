@@ -8,7 +8,7 @@
 
 
 <!-- Login Form -->
-	                    <form action="<?php echo base_url(); ?>login/getpassword" method="post" 
+	                    <form action="<?php echo base_url(); ?>users/getpassword" method="post" 
                         name="form" id="form1" onSubmit = "return validateForm()">
                         
 	                    	<div class="widget">

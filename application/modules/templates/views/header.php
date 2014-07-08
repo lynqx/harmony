@@ -248,7 +248,7 @@
                         </li>
                         <li><a href="<?php echo base_url(); ?>settings/<?php echo $id; ?>" title=""><i
                                     class="icon-cog"></i>Settings</a></li>
-                        <li><a href="<?php echo base_url(); ?>login/logout" title="End Session"
+                        <li><a href="<?php echo base_url(); ?>users/logout" title="End Session"
                                onclick="return confirm('Are you sure you want to log out?');"><i
                                     class="icon-remove"></i>Logout</a></li>
                     </ul>
@@ -257,7 +257,7 @@
             <?php
             } else {
                 $baseUrl = base_url();
-                echo '<li class="dropdown"><a class="user-menu" href="' . $baseUrl . 'login">Login</a></li>';
+                echo '<li class="dropdown"><a class="user-menu" href="' . $baseUrl . 'users/login">Login</a></li>';
 
             }
             ?>

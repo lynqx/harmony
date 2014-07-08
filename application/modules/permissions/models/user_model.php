@@ -110,65 +110,7 @@ class User_model extends CI_Model
             }
         } else return false;
     }
-
-    /**
-     * @return bool
-     */
-    function create_user()
-    {
-        //TODO: use the supplied data to create a new user
-        //TODO: remember to set the default user's status to inactive and also a default cooperator role if none was specified  on the UI
-        $role = $this->input->post('role');
-        // create date and time for last login
-        $datetime = date("d-m-Y");
-        //TODO: Capture and store Address Info first
-        $address_insert_data = array(
-            'addressline1' => $this->input->post('addressLine1'),
-            'addressline2' => $this->input->post('addressLine2'),
-            'city' => $this->input->post('city'),
-            'state' => $this->input->post('state'),
-            'country' => $this->input->post('country')
-        );
-        $this->db->insert('address', $address_insert_data);
-        $address = $this->db->insert_id();
-        //TODO: Check if address entry was successful then collect and store user data
-        if (!$address > 0) {
-            return false;
-        }
-        $new_user_insert_data = array(
-            'username' => $this->input->post('username'),
-            'passwd' => SHA1($this->input->post('passwd')),
-            'firstname' => $this->input->post('firstname'),
-            'lastname' => $this->input->post('lastname'),
-            'date_created' => $datetime,
-            'mobile' => $this->input->post('mobile'),
-            'email' => $this->input->post('email'),
-            'address' => $address,
-            'active' => 0, //Users are inactive by default
-            'last_login' => ''
-
-        );
-        $this->db->insert('users', $new_user_insert_data);
-        $insert = $this->db->insert_id();
-        //TODO: if insert was successful, add the user to a role before returning results
-        if ($insert) {
-            $rolesAdded = $this->addUserToRole($insert, $role); //The role is gotten from the UI
-            if ($rolesAdded)
-                //TODO: Get the sender from the session
-                $this->load->library('session');
-           
-		    //TODO: Get the Id
-			// log user actions
-            Modules::run('contributions/add_new_account', $insert);
-            $userId = $this->session->userdata('id');
-            $action = 'Created New Member ' . $this->input->post('username'); //TODO: set the action
-            $this->Log_model->log($action, $userId);
-            return $insert;
-        } else return false;
-
-
-    }
-
+ 
     /**
      * @param $username
      * @return bool
@@ -230,22 +172,7 @@ class User_model extends CI_Model
 
      }*/
 
-    /**
-     * @param $userId
-     * @param $role
-     * @return mixed
-     */
-    public function addUserToRole($userId, $role)
-    {
-        //TODO: Just insert the userId and roleId
-        $insert_data = array(
-            'user_id' => $userId,
-            'role_id' => $role
-        );
-        $result = $this->db->insert('user_roles', $insert_data);
-        return $result;
-    }
-
+    
     /**
      * @param string $role
      * @return array | User_model

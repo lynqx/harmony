@@ -40,14 +40,14 @@
 
                             <tbody>
                             <?php foreach ($users as $user) { ?>
-								<?php $id = $user->member_id; ?>
+								<?php $id = $user->id; ?>
                                 <tr>
                                     <td>
                 <center><input type="checkbox" style="width: 20px;" name="checkbox[]" value="<?php echo $id; ?>" class="styled"></center>
                                     </td>
                                     <td> <?php echo '<a class="testButton" id="testButton1">' . $user->username . '</a>'?></td>
                                     <td> <?php echo $user->email; ?></td>
-                                    <td> <?php echo $user->mobile; ?></td>
+                                    <td> <?php echo $user->phone_number; ?></td>
                                     <td> <?php 
 									if ($user->active == 0) {
 										echo 'Blocked';
