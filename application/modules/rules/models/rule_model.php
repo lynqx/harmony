@@ -19,6 +19,38 @@ class Rule_model extends CI_Model {
      * @var
      */
     private $category;
+    private $description;
+
+    /**
+     * @param mixed $description
+     */
+    public function setDescription($description)
+    {
+        $this->description = $description;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDescription()
+    {
+        return $this->description;
+    }
+    /**
+     * @param mixed $requireSettings
+     */
+    public function setRequireSettings($requireSettings)
+    {
+        $this->requireSettings = $requireSettings;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRequireSettings()
+    {
+        return $this->requireSettings;
+    }
     /**
      * @param mixed $category
      */
@@ -26,6 +58,11 @@ class Rule_model extends CI_Model {
 
     /**
      * @param mixed $ruleID
+     */
+    private $requireSettings;
+
+    /**
+     * @param $ruleID
      */
     public function setRuleID($ruleID)
     {
@@ -39,6 +76,10 @@ class Rule_model extends CI_Model {
     {
         return $this->ruleID;
     }
+
+    /**
+     * @param $category
+     */
     public function setCategory($category)
     {
         $this->category = $category;
@@ -84,6 +125,9 @@ class Rule_model extends CI_Model {
         return $this->title;
     }
 
+    /**
+     *
+     */
     public function __construct()
     {
         parent::__construct();

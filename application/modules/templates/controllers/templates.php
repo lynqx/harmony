@@ -90,6 +90,13 @@ if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 		
 		
 		}
+        function contributions($data)
+        {
+            $this->load->view('contributions/header', $data);
+            //$this->load->view('contributions/sidebar', $data);
+            $this->load->view('contributions/contribution_template1', $data);
+            $this->load->view('contributions/footer', $data);
+        }
 		
 		
 

@@ -44,17 +44,19 @@
         
 
 <link href="<?php echo base_url(); ?>css/main.css" rel="stylesheet" type="text/css" />
-<!--[if IE 8]><link href="css/ie8.css" rel="stylesheet" type="text/css" /><![endif]-->
-<!--[if IE 9]><link href="css/ie9.css" rel="stylesheet" type="text/css" /><![endif]-->
+<!--[if IE 8]><link href="<?php echo base_url(); ?>css/ie8.css" rel="stylesheet" type="text/css" /><![endif]-->
+<!--[if IE 9]><link href="<?php echo base_url(); ?>css/ie9.css" rel="stylesheet" type="text/css" /><![endif]-->
 <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,600,700' rel='stylesheet' type='text/css'>
 
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/jquery-ui.min.js"></script>
 
 <script type="text/javascript" src="<?php echo base_url(); ?>js/plugins/forms/jquery.uniform.min.js"></script>
+    <script type="text/javascript" src="<?php echo base_url(); ?>js/plugins/forms/jquery.form.wizard.js"></script>
+    <script type="text/javascript" src="<?php echo base_url(); ?>js/plugins/forms/jquery.form.js"></script>
 
 <script type="text/javascript" src="<?php echo base_url(); ?>js/files/bootstrap.min.js"></script>
-
+    <script type="text/javascript" src="<?php echo base_url(); ?>js/files/functions.js"></script>
 <script type="text/javascript" src="<?php echo base_url(); ?>js/files/login.js"></script>
 
 </head>

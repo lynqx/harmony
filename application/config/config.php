@@ -12,7 +12,7 @@
 |
 */
 //$config['base_url']	= "http://localhost/Armony/";
-$config['base_url'] = "http://localhost/harmony/";
+$config['base_url'] = "http://localhost/armony/";
 
 /*
 |--------------------------------------------------------------------------
