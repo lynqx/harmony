@@ -47,6 +47,7 @@ define('CONTRIBUTIONS_SETTINGS_TABLE','contributions_settings');
 define('CONTRIBUTION_CATEGORY','contribution');
 define('LOAN_CATEGORY','loan');
 define('RULE_SETTINGS_TABLE','rules_settings');
+define('COMMA_DELIMITER',',');
 
 /* End of file constants.php */
 /* Location: ./application/config/constants.php */

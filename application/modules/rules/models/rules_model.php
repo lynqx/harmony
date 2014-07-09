@@ -16,11 +16,11 @@ class Rules_model extends CI_Model
         $this->load->model('permissions/User_model');
     }
 
-    public function checkRuleExists($ruleId)
+    public function checkRuleExists($ruleTitle)
     {//check if a rule exists using the id
         $this->db->select('title')
             ->from('rules')
-            ->where('rules.id',$ruleId);
+            ->where('rules.title',$ruleTitle);
         $query=$this->db->get();
         if($query->num_rows() > 0)
         {
@@ -29,16 +29,16 @@ class Rules_model extends CI_Model
         else return false;
     }
 
-    public function loadRuleSet($category, $id)
+    public function loadRuleSet($category, $id)//deals with loans and contributions
     {
         switch ($category) {
 
             case LOAN_CATEGORY:
 
-                $this->db->select('loans_rules.rule_id,rules.title,rule_definitions.rules_def')
+                $this->db->select('loans_rules.rule_id,rules.title,rule_definitions.rules_def,rule_definitions.require_settings')
                     ->from('loans_rules')
-                    ->join('rules', 'rules.id=loans_rules.rule_id')
-                    ->join('rule_definitions', 'rule_definitions.rule_id=loans_rules.rule_id')
+                    ->join('rules', 'rules.title=loans_rules.rule_title')
+                    ->join('rule_definitions', 'rule_definitions.rule_title=loans_rules.rule_title')
                     ->where('loans_rules.loan_id', $id);
                 $query = $this->db->get();
                 return $this->_populateRuleSet($category,$query->result());
@@ -46,11 +46,11 @@ class Rules_model extends CI_Model
                 break;
 
             case CONTRIBUTION_CATEGORY:
-                $this->db->select('contributions_rules.rule_id,rule_definitions.rules_def')
+                $this->db->select('contributions_rules.rule_id,rule_definitions.rules_def,rule_definitions.require_settings')
                     ->from('contributions_rules')
-                    ->join('rules', 'rules.id=contributions_rules.rule_id')
-                    ->join('rule_definitions', 'rule_definitions.rule_id=contributions_rules.rule_id')
-                    ->where('contributions_rules.loan_id', $id);
+                    ->join('rules', 'rules.title=contributions_rules.rule_title')
+                    ->join('rule_definitions', 'rule_definitions.rule_title=contributions_rules.rule_title')
+                    ->where('contributions_rules.contribution_id', $id);
                 $query = $this->db->get();
                 return $this->_populateRuleSet($category,$query->result());
                 break;
@@ -95,7 +95,7 @@ class Rules_model extends CI_Model
 
     }
 
-    private function _checkRuleSettings($category,$rule_id)
+    private function _checkRuleSettings($category,$id)
     {
         /**
          * Checks to see if a rule has settings using the category as a guide. If it does it returns the settings as a collection in the order in which the strings are tokenized
@@ -106,9 +106,10 @@ class Rules_model extends CI_Model
         switch($category)
         {
             case LOAN_CATEGORY:
-                $this->db->select('key,value')
+                //TODO: Check the require_settings value
+                $this->db->select('value')
                     ->from(LOANS_SETTINGS_TABLE)
-                    ->where('loans_settings.br_id',$rule_id);
+                    ->where('loan_id',$id);
                 $query=$this->db->get();
                 if($query->num_rows() > 0)
                 {
@@ -127,9 +128,9 @@ class Rules_model extends CI_Model
                 else return null;
                 break;
             case CONTRIBUTION_CATEGORY:
-                $this->db->select('key,value')
+                $this->db->select('value')
                     ->from(CONTRIBUTIONS_SETTINGS_TABLE)
-                    ->where('contributions_settings.rule_id',$rule_id);
+                    ->where('contribution_id',$id);
                 $query=$this->db->get();
                 if($query->num_rows() > 0)
                 {
@@ -163,6 +164,8 @@ class Rules_model extends CI_Model
                 $rule->setTitle($singleRule->title);
                 $rule->setDefinition($singleRule->rules_def);
                 $rule->setRuleID($singleRule->rule_id);
+                $rule->setDescription($singleRule->description);
+                $rule->setRequireSettings($singleRule->require_settings);
                 $ruleSet->addRuleToSet($rule);
             }
             return $ruleSet;
@@ -177,5 +180,73 @@ class Rules_model extends CI_Model
             return explode(RULE_SETTINGS_DELIMITER,$ruleSettings);
         }
         else return [];
+    }
+    private function _tokenizeByComma($settingsEntry)
+    {
+        return explode(COMMA_DELIMITER,$settingsEntry);
+    }
+    public function saveSelectedRules($Id,$category,$rules)
+    {
+        //TODO: Sort the supplied array IDs in ascending order
+        //Rules format from the UI => $arr=array(rule_id=>settings_value,rule_id=>settings_value);
+        //check if the rule requires settings, if yes, combine the settings using the delimiter for separating settings
+        //each setting entry should be saved in the db like so id,contribution_id,rule_id
+        //key would be the contribution_id while value would be the settings like so
+        //(id,contribution_id,value,date)as(1,1,[1,25000:::3,50000::7,70],02-07-2014)
+
+        if($Id>0 && count($rules)>0)
+        {//Assume a format like this: array(rule_id=>settings_value,rule_id=>settings_value)
+            /**
+             * How about say we have something like this:
+             * [rule_id=>array(settingsValue1,settingsValue2),rule_id=>array(settingsValue1,settingsValue2)]
+             *
+             */
+            //sort the array and run through the array of rule=>settings to merge them
+            ksort($rules);
+            $mergedTotal='';
+            foreach($rules as $key=>$val)
+            {
+                //call the merger
+                $mergedTotal.=$this->_mergeBy3Colons($key,$val);
+            }
+            //shook it in the db table
+            switch($category){
+                case CONTRIBUTION_CATEGORY:
+            $insertData=array("contribution_id"=>$Id,"value"=>$mergedTotal);
+            $this->db->insert(CONTRIBUTIONS_SETTINGS_TABLE,$insertData);
+                    if($this->db->insert_id() > 0)
+                    {
+                        return true;
+                    }
+                    else return false;
+        }
+        }
+
+    }
+    private function _mergeBy3Colons($ruleId,$settingValue)
+    {
+        //checks
+        if($ruleId>0 && !is_null($settingValue))
+        {
+            //peform merge
+            $merged=$ruleId.RULE_SETTINGS_DELIMITER.$settingValue;
+            return $merged;
+        }
+        else return '';
+    }
+    public function fetchRules($category)
+    {
+        //Fetch rules by the categories
+        $this->db->select('rules.id as rule_id,rules.title,rule_definitions.rules_def,rule_definitions.require_settings,rules.description');
+        $this->db->from('rules');
+        $this->db->join('rule_definitions','rules.title=rule_definitions.rule_title');
+        $this->db->join('rules_categories','rules.title=rules_categories.rule_title');
+        $this->db->where('rules_categories.category_code',$category);
+        $query=$this->db->get();
+        if($query->num_rows() > 0)
+        {
+            return $this->_populateRuleSet('',$query->result());
+        }
+
     }
 }
