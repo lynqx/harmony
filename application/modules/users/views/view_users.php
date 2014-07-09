@@ -50,8 +50,6 @@
                                     <th>Status</th>
                                     <th>Last Login</th>
                                     <th> View </th>
-                                    <th> Loans </th>
-                                    <th> Assets </th>
                                     <th> Exit CTCS </th>
                                 </tr>
                             </thead>
@@ -102,16 +100,8 @@
                           <td> 
 						  <?php echo'<a href="view/'. $id . '" class="btn btn-info tip" title="View"><i class="icon-zoom-in"></i></a>'; ?>
 						  </td>
-                         
-                          <td> 
-						  <?php echo'<a href="loan/apply/'. $id . '" class="btn btn-info tip" title="Loan"><i class="ico-plus"></i></a>'; ?>
-						  </td>
-                          
-                          <td> 
-						  <?php echo'<a href="assetloan/apply/'. $id . '" class="btn btn-info tip" title="Asset Loan"><i class="ico-edit"></i></a>'; ?>
-						  </td>                        
-                                                        
-                                <td><?php echo'<a href="entitlements/view/'. $id .'" 
+                    
+                           <td><?php echo'<a href="entitlements/view/'. $id .'" 
 								onclick="return confirm(\'Are you sure you want to exit from ctcs?\');" class="btn btn-info tip" title="Exit CTCS"><i class="ico-remove"></i></a>'; ?></td>
 						    			
                                     								
@@ -178,7 +168,7 @@
 		<div id="fixedmodal">
             <div class="modal-dialog">
               <div class="modal-content">
-                <div class="modal-header">
+                <div class="modal-header" style="background:#ccc">
                   <button type="button" class="close" data-dismiss="modal" aria-hidden="true" onclick="closeModal('fixedmodal')"><i class="ico-remove"></i> </button>
                   <h4 class="modal-title" id="myModalLabel">Member Details</h4>
                 </div>

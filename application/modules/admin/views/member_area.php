@@ -107,15 +107,11 @@
                                     <div class="navbar-inner"><h6>Site Management</h6></div>
                                 </div>
                                 <ul class="nav nav-tabs nav-stacked">
-                                    <li><a class="view-pages-modal" href="#"><i class="icon-home"></i>View Pages</a>
-                                    </li>
-                                    <li class="dropdown" id="menu4"><a class="dropdown-toggle" data-toggle="dropdown"
-                                                                       href="#menu4"><i class="icon-ok"></i>Manage
-                                            Pages <b class="caret"></b></a>
+                                    <li class="dropdown" id="menu4">
+										<a class="dropdown-toggle" data-toggle="dropdown" href="#menu4"><i class="icon-ok"></i>Manage Pages <b class="caret"></b></a>
                                         <ul class="dropdown-menu">
-                                            <li><a href="#"><i class="icon-plus"></i>Add New Page</a></li>
-                                            <li><a href="#"><i class="icon-reorder"></i>Update Existing Pages</a></li>
-                                            <li><a href="#"><i class="icon-cogs"></i>Remove a Page</a></li>
+                                            <li><a href="sitecms/create"><i class="icon-plus"></i>Add New Pages</a></li>
+                                            <li><a href="sitecms/view"><i class="icon-cogs"></i>View All Pages</a></li>
                                         </ul>
                                     </li>
                                 </ul>
@@ -128,16 +124,12 @@
                                     <div class="navbar-inner"><h6>Members Management</h6></div>
                                 </div>
                                 <ul class="nav nav-tabs nav-stacked">
-                                    <li class="dropdown" id="menu6"><a class="dropdown-toggle" data-toggle="dropdown"
-                                                                       href="#menu6"><i class="icon-ok"></i>Manage
-                                            Members <b class="caret"></b></a>
+								    <li><a href="users/register"><i class="icon-plus"></i>Add New Member</a></li>
+                                    <li class="dropdown" id="menu6">
+									<a class="dropdown-toggle" data-toggle="dropdown" href="#menu6"><i class="icon-ok"></i>Manage Members <b class="caret"></b></a>
                                         <ul class="dropdown-menu">
-                                            <li><a class="view-members-modal" href="#"><i class="icon-table"></i> View
-                                                    Members </a></li>
-                                            <li><a href="#"><i class="icon-plus"></i>Add New Member</a></li>
-                                            <li><a href="#"><i class="icon-reorder"></i>Update Existing Member Info</a>
-                                            </li>
-                                            <li><a href="#"><i class="icon-cogs"></i>Remove a Member</a></li>
+                                            <li><a href="users/viewall"><i class="icon-table"></i> View All Members </a></li>
+                                            <li><a href="users/pending"><i class="icon-table"></i> View Pending Members </a></li>
                                         </ul>
                                     </li>
                                 </ul>
