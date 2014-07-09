@@ -1,3 +1,17 @@
+<style>
+	<!--
+	#fixedmodal
+	{
+		min-width:700px;
+		background:#ccc;
+		display: none;
+		position: fixed;
+		bottom: 50px;
+	}
+	
+	//-->
+</style>
+
 <?php
 			$data = $this->session->flashdata('result');
 			if (isset($data)) echo '<h6>' . $data . '</h6>';
@@ -49,7 +63,7 @@
                                     <td>
                 <center><input type="checkbox" style="width: 20px;" name="checkbox[]" value="<?php echo $id; ?>" class="styled"></center>
                                     </td>
-                                    <td> <?php echo '<a class="testButton" id="testButton1">' . $user->username . '</a>'?></td>
+                                    <td><a href="#" onclick="showInfo('fixedmodal', 'modalcontent', '<?php echo $id; ?>')"> <?php echo $user->username; ?></a></td>
                                     <td> <?php echo $user->email; ?></td>
                                     <td> <?php echo $user->phone_number; ?></td>
                                     <td> <?php 
@@ -157,3 +171,68 @@
                         </div>
 
                                        	   </form>
+										   
+										   
+										   <!-- Modal -->
+         <!-- <div class="modal fade"  role="dialog" aria-hidden="true"> -->
+		<div id="fixedmodal">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <button type="button" class="close" data-dismiss="modal" aria-hidden="true" onclick="closeModal('fixedmodal')"><i class="ico-remove"></i> </button>
+                  <h4 class="modal-title" id="myModalLabel">Member Details</h4>
+                </div>
+                <div class="modal-body">  
+                  <!--------------------------------------------------->
+				  <div id="modalcontent">
+				  
+				  </div>
+				  <!--------------------------------------------------->
+                </div>
+              </div><!-- /.modal-content -->
+            </div><!-- /.modal-dialog -->
+          </div>
+          <!-- /.modal -->
+										   
+										   
+										   <script>
+
+	function showInfo(modal_div, content_div, request_id)
+	{
+		//display div
+		var md = document.getElementById(modal_div);
+		md.style.display = 'block';
+		
+		//verify xmlhttp object
+		var xmlhttp;
+		if (window.XMLHttpRequest)
+		{	// code for IE7+, Firefox, Chrome, Opera, Safari
+			xmlhttp=new XMLHttpRequest();
+		}
+		else
+		{	// code for IE6, IE5
+			xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+		}
+		
+		//do xmlhttp request
+		xmlhttp.onreadystatechange=function()
+		{
+			if (xmlhttp.readyState==4 && xmlhttp.status==200)
+			{
+				document.getElementById(content_div).innerHTML=xmlhttp.responseText;
+			}
+		}
+		
+		//send request
+		xmlhttp.open("GET","<?php echo base_url(); ?>users/member_details/"+request_id,true);
+		xmlhttp.send();
+	}
+	
+	function closeModal(modal_div)
+	{
+		var md = document.getElementById(modal_div);
+		if(md.style.display=='block')
+		md.style.display='none';
+	}
+
+</script>

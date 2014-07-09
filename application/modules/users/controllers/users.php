@@ -79,6 +79,36 @@ class Users extends MX_Controller
 
 					
 	}
+	
+	
+	// view profile of another user on ajax
+	// redirected from view all user page
+	public function member_details($update_id)
+				{
+						
+		$update_id = $this->uri->segment(3);
+		if (!is_numeric($update_id)) {
+			$location = 'users/viewall';
+			redirect ($location);
+			}
+		
+		if (is_numeric($update_id)) {
+			//$data = $this->get_member_data_from_db($update_id);
+			$data = $this->userview->get_user($update_id);
+			$data['update_id'] = $update_id;
+			} else {
+			$data = $this->get_data_from_post();
+				}
+							
+					$firstname = $data['firstname'];
+					$lastname = $data['lastname'];
+					$image = $data['image'];
+
+                    	$this->load->view('users/member_view', $data);
+
+
+					
+	}
 		
 	//update cooperators profile
 	public function update()
