@@ -36,6 +36,15 @@ class Message extends MX_Controller
         Modules::run('login/is_logged_in');
         //TODO: if the user survives this, he/she has been cleared
         //TODO: Run validations
+		$receive = $this->uri->segment(3);
+		
+		if (is_numeric($receive)) {
+			//$data = $this->get_member_data_from_db($update_id);
+			$user = $this->message->getUserName2($receive);
+			$data['users'] = $user['rows'];
+		
+		}
+			
         $this->load->library('form_validation');
 
         // field name, error message, validation rules
@@ -44,7 +53,7 @@ class Message extends MX_Controller
         $this->form_validation->set_rules('content', 'Message content', 'trim|required|xss_clean');
         if ($this->form_validation->run() == FALSE) {
             //TODO: This means it failed
-            $data['page_title'] = 'Create Message';
+            $data['page_title'] = 'Compose Message';
             $data['module'] = 'message';
             $data['view_file'] = 'create_message';
             echo modules::run('templates/main_site', $data);
@@ -53,10 +62,45 @@ class Message extends MX_Controller
             $result = $this->message->sendMessage();
             if ($result > 0) {
                 $this->session->set_flashdata('result', 'Message sent successfully!');
-                redirect('message/create');
+                redirect('message/compose');
             } else {
                 $this->session->set_flashdata('result', 'Message wasnt sent! Please try again');
-                redirect('message/create');
+                redirect('message/compose');
+            }
+
+        }
+    }
+	
+	function reply()
+    {
+        //TODO: Ensure the user is logged in
+        Modules::run('login/is_logged_in');
+        //TODO: if the user survives this, he/she has been cleared
+        //TODO: Run validations
+		$repId = $this->uri->segment(3);
+		
+		$this->load->library('form_validation');
+
+        // field name, error message, validation rules
+        //TODO: The following are validation rules for Membership
+        $this->form_validation->set_rules('subject', 'Subject', 'trim|required|xss_clean');
+        $this->form_validation->set_rules('content', 'Message content', 'trim|required|xss_clean');
+        if ($this->form_validation->run() == FALSE) {
+            //TODO: This means it failed
+            $this->session->set_flashdata('result', 'One or more fields are empty! Reply wasnt sent! Please try again');
+            $location = 'message/view/'.$repId;
+			redirect ($location);
+        } else {
+            //TODO: This means Validation passed. So process it!
+            $result = $this->message->sendMessage();
+            if ($result > 0) {
+                $this->session->set_flashdata('result', 'Message sent successfully!');
+                $location = 'message/view/'.$repId;
+				redirect ($location);
+            } else {
+                $this->session->set_flashdata('result', 'Message wasnt sent! Please try again');
+                $location = 'message/view/'.$repId;
+				redirect ($location);
             }
 
         }
@@ -90,6 +134,12 @@ class Message extends MX_Controller
 
     function view($messageId)
     {
+	
+	$messageId = $this->uri->segment(3);
+		if (!is_numeric($messageId)) {
+			$location = 'message.....';
+			redirect ($location);
+			}
         //TODO: Ensure the user is logged in
         Modules::run('login/is_logged_in');
         //TODO: if the user survives this, he/she has been cleared

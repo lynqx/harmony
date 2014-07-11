@@ -100,7 +100,6 @@ class Permissions extends MX_Controller
             				
 		
 		}
-		//die();						
 				//TODO: This means we are not successful.Let's tell the user the bad news
 				$this->session->set_flashdata('result', 'Success : Operation Successful');
 				redirect('permissions');

@@ -20,7 +20,7 @@
                 <th>
                     <center><input type="checkbox" name="checkrow" class="styled"/></center>
                 </th>
-                <th>Sender</th>
+                <th>From</th>
                 <th>Title</th>
                 <th>Date</th>
                 <th colspan="2">Actions</th>
@@ -37,9 +37,10 @@
                 echo '<tr>';
                 echo '<td><center><input style="width: 20px;" name="checkbox[]" type="checkbox" value="' . $row->message_id . '" class="styled"/></center></td>';
                 echo '<td>' . $row->sender_name . '</td>';
-                echo '<td><a href="message/view/' . $row->message_id . '">' . $row->message_title . '</a></td>';
+                echo '<td><a href="' . base_url() . 'message/view/' . $row->message_id . '">' . $row->message_title . '</a></td>';
                 echo '<td>' . $row->message_date . '</td>';
-                echo '<td><a class="btn btn-success btn-mini" href="message/view/' . $row->message_id . '"><i class="ico-edit"></i> View</a></td><td> <a class="btn btn-mini btn-danger" href="message/delete/' . $row->message_id . '"><i class="icon-remove"> Delete</a></td>';
+                echo '<td><a class="btn btn-success btn-mini" href="' . base_url() . 'message/view/' . $row->message_id . '"><i class="ico-edit"></i> View</a></td>
+				<td> <a class="btn btn-mini btn-danger" href="' . base_url() . 'message/delete/' . $row->message_id . '"><i class="icon-remove"> Delete</a></td>';
                 echo '</tr>';
                 $count++;
             }

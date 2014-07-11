@@ -8,7 +8,12 @@
 ?>
 <div class="navbar">
     <div class="navbar-inner">
-        <h6>Create a message</h6>
+        <?php if(isset($users)) {
+		echo '<h6>Reply Message</h6>';
+		} else {
+		echo '<h6>Create a message</h6>';
+		}
+		?>
     </div>
 </div>
 <?php echo validation_errors('<p class="error" style="color:#F00">'); ?>
@@ -17,8 +22,32 @@
     if (isset($data)) echo $data;
 
     ?></h6>
-<form name="create_message" id="create_message" method="post" action="message/compose" enctype="multipart/form-data">
+<form name="create_message" id="create_message" method="post" action="<?php echo base_url(); ?>message/compose" enctype="multipart/form-data">
 
+<?php 
+			if(isset($users)) {
+			foreach ($users as $user) {
+			$username = $user->username;
+				?>
+				
+		<div class="control-group">
+        <div class="controls">
+            <label class="control-label"><h6>Receipient</h6></label>
+
+            <div class="input-prepend">
+						            		<span class="add-on">
+                                            <span style="color:#F00">*</span>
+                                            <i class="ico-tag"></i>
+                                            </span>
+                <input id="prependedInput" type="text" name="receiver_id" value ="<?php echo $username ?>" class="input-xlarge" readonly/>
+            </div>
+        </div>
+    </div>
+								
+			<?php	}
+				} else {
+				
+				?>
     <div class="control-group">
         <div class="controls">
             <label class="control-label"><h6>Receipient</h6></label>
@@ -54,6 +83,8 @@
             </div>
         </div>
     </div>
+	
+	<?php } ?>
 	
 	    <div class="control-group">
         <div class="controls">

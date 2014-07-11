@@ -132,20 +132,39 @@ class Message_model extends CI_Model
         $result = $this->db->get();
         return $result->result()[0]->username; //TODO: Ensure you extract the username as a field: $result->username
     }
+	
+	function getUserName2($userId)
+    {
+        //TODO: This function allows you to get a user's name
+        $query = $this->db->select('users.username')
+        ->from('users')
+        ->where('users.id', $userId);
+        
+		$result['rows'] = $query->get()->result();	
+		return $result;
+
+    }
+	
 
     function getMessage($id)
     {
         //TODO: get the sender's name, id, message title and message content
-        $query = 'SELECT msg.id,msg.content,msg.subject,msg.sent_time,user_messages.sender_id,user_messages.state,users.username FROM msg JOIN user_messages ON user_messages.message_id=msg.id JOIN users ON users.id=user_messages.sender_id WHERE msg.id=? AND user_messages.state="sent"';
+        $query = 'SELECT msg.id AS mid,msg.content,msg.subject,msg.sent_time,user_messages.sender_id,user_messages.state,users.id AS uid,users.username 
+					FROM msg 
+					JOIN user_messages ON user_messages.message_id=msg.id 
+					JOIN users ON users.id=user_messages.sender_id 
+					WHERE msg.id=? AND user_messages.state="sent"';
+					
         $result = $this->db->query($query, array($id));
         //TODO: Since we are expecting just one result
         $messageBag = array();
         foreach ($result->result() as $row) {
             //TODO: Create Message_model
             $message = new Message_model();
+            $message->sender_id = $row->uid;
             $message->sender_name = $row->username;
             $message->message_date = $row->sent_time;
-            $message->message_id = $row->id;
+            $message->message_id = $row->mid;
             $message->message_title = $row->subject;
             $message->message_content = $row->content;
             $messageBag[] = $message;
@@ -179,7 +198,7 @@ class Message_model extends CI_Model
 				
         $id = $this->session->userdata('id');
 
-	$query = $this->db->select('COUNT(*) as count', FALSE)
+		$query = $this->db->select('COUNT(*) as count', FALSE)
 					->from('user_messages')
 					->where('recepient_id', $id);
 
