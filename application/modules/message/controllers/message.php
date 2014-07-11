@@ -5,6 +5,11 @@
  * Date: 1/27/14
  * Time: 6:50 AM
  */
+ /**
+ * Editted :
+ * User: "Lynqx" Date: 07/11/14
+ */
+ 
 if (!defined('BASEPATH')) exit('No direct script access allowed');
 class Message extends MX_Controller
 {
@@ -25,7 +30,7 @@ class Message extends MX_Controller
         echo Modules::run('templates/main_site', $data);
     }
 
-    function create()
+    function compose()
     {
         //TODO: Ensure the user is logged in
         Modules::run('login/is_logged_in');

@@ -49,4 +49,71 @@ class Role_model extends CI_Model
         $query = $this->db->get('roles');
         return $query;
     }
+	
+	function getAllPermissions($id = FALSE)
+    {
+        $query = $this->db->select('*')
+			->from('permissions');
+			$result['rows'] = $query->get()->result();	
+			
+
+// count query
+									$query = $this->db->select('COUNT(*) as count', FALSE)
+									->from('permissions');
+									$tmp = $query->get()->result();
+									$result['perm_rows'] = $tmp[0]->count;
+
+									
+			$query = $this->db->select('*')
+			->from('roles_permissions')
+			->join('permissions', 'permissions.id = roles_permissions.permission_id')
+			->where('role_id', $id);
+			$result['realrow'] = $query->get()->result();	
+			
+			return $result;
+    }
+	
+	
+	    function CreateRoles()
+	{
+		$role = $this->input->post('rolename');
+        // create date and time for last login
+        $datetime = date("d-m-Y");
+        //TODO: Capture and store the role information
+        $role_insert_data = array(
+		            'title' => $role,
+					'date_created' => $datetime,
+					);
+					
+        $result = $this->db->insert('roles', $role_insert_data);
+		        return $result;
+
+	}
+	
+	
+	    function AddPerm($role, $perm)
+	{
+		$this->db->select('*')
+		->from('roles_permissions')
+		->where('role_id', $role)
+		->where('permission_id', $perm);
+		$query = $this->db->get();
+		
+        $row = $query->result(); //Since we are expecting a  single result
+        if (empty($row)) 
+		{
+        
+        // create date and time for last login
+        //TODO: Capture and store the role information
+        $role_perm_insert_data = array(
+		            'role_id' => $role,
+					'permission_id' => $perm,
+					);
+					
+        $result = $this->db->insert('roles_permissions', $role_perm_insert_data);
+		        return $result;
+
+		}
+	}
+	
 } 

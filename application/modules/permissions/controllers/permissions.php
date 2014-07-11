@@ -42,14 +42,74 @@ class Permissions extends MX_Controller
         } else {
             $data = $this->get_data_from_post();
         }
+		
 
-        $data['page_title'] = 'Membership Account Setup';
+        $data['page_title'] = 'Add Permission to Roles';
         $data['module'] = 'permissions';
-        $data['view_file'] = 'create_member';
+        $data['view_file'] = 'add_permission';
 
         echo Modules::run('templates/main_site', $data);
 
     }
+	
+	
+	public function getall($id)
+    {
+				$id = $this->uri->segment(3);
+                $menu = $this->role->getAllPermissions($id);
+				
+				$data['menus'] = $menu['rows'];
+				$data['reals'] = $menu['realrow'];
+				$data['perm_menu'] = $menu['perm_rows'];
+
+				
+			    $this->load->view('permissions/getall', $data);
+
+			
+	}
+	
+	
+	public function addToRole()
+    {
+			//print_r ($_POST);
+
+        //TODO: Run validations
+        $this->load->library('form_validation');
+
+        // field name, error message, validation rules
+        //TODO: The following are validation rules for creating roles
+        $this->form_validation->set_rules('role', 'Role', 'trim|required|xss_clean');
+
+        //TODO: Run the validation
+        if ($this->form_validation->run() == FALSE) {
+            //TODO: This means it failed
+            $this->index();
+			
+        } else {
+		
+		$role =  $this->input->post('role');
+		$total =  $this->input->post('total');
+
+		for ($i = 1; $i<=$total; $i++) {
+		//$perm = $this->input->post('perm'.$i);
+		if(!empty($_POST['perm'.$i])) {
+			echo $perm = $_POST['perm'.$i] . '<br>';
+
+			$permadd = $this->role->AddPerm($role, $perm);
+			}
+            				
+		
+		}
+		//die();						
+				//TODO: This means we are not successful.Let's tell the user the bad news
+				$this->session->set_flashdata('result', 'Success : Operation Successful');
+				redirect('permissions');
+			}
+  
+    }
+
+	
+	
 
     /**
      * @param $username
@@ -97,11 +157,52 @@ class Permissions extends MX_Controller
     /**
      * @param $rolename
      */
-    public function createNewRole($rolename)
+    public function Role()
     {
         //TODO: create a new role for the entire system
+		$data['page_title'] = 'Create a New Role';
+        $data['module'] = 'permissions';
+        $data['view_file'] = 'create_role';
+
+        echo Modules::run('templates/main_site', $data);
+    }
+	
+	
+	public function createRole()
+    {
+        //TODO: Run validations
+        $this->load->library('form_validation');
+
+        // field name, error message, validation rules
+        //TODO: The following are validation rules for creating roles
+        $this->form_validation->set_rules('rolename', 'Role Name', 'trim|required|xss_clean');
+       
+        //TODO: Run the validation
+        if ($this->form_validation->run() == FALSE) {
+            //TODO: This means it failed
+            $this->role();
+			
+        } else {
+            //TODO: call the model
+            $rolecreate = $this->role->CreateRoles();
+            if ($rolecreate) {
+                
+				//TODO: This means we were successful.Let's tell the user the good news
+				$this->session->set_flashdata('result', 'Success : Role Added Successfully');
+				redirect('permissions/role');
+
+            } else {
+			
+			//TODO: This means we are not successful.Let's tell the user the bad news
+				$this->session->set_flashdata('result', 'Error : Role Not Added');
+				redirect('permissions/role');
+			}
+
+        }
+
 
     }
+	
 
     /**
      * @param $roleName
@@ -135,57 +236,7 @@ class Permissions extends MX_Controller
         echo Modules::run('templates/main_site', $data);
 
     }
-
-    //TODO: The following are a list of functions that allow for membership CMS functions
-    /**
-     *
-     */
-    public function createMember()
-    {
-        //TODO: Run validations
-        $this->load->library('form_validation');
-
-        // field name, error message, validation rules
-        //TODO: The following are validation rules for User Biodata
-        $this->form_validation->set_rules('firstname', 'First Name', 'trim|required|xss_clean');
-        $this->form_validation->set_rules('lastname', 'Last Name', 'trim|required|xss_clean');
-        $this->form_validation->set_rules('mobile', 'Mobile', 'trim|required|numeric|xss_clean');
-        $this->form_validation->set_rules('email', 'Email Address', 'trim|required|valid_email|is_unique[users.email]|xss_clean');
-//		$this->form_validation->set_rules('address', 'Address', 'trim|required|xss_clean');  ## Samuel please explain why this is foreign here
-        $this->form_validation->set_rules('username', 'Username', 'trim|required|min_length[4]|is_unique[users.username]|xss_clean');
-        $this->form_validation->set_rules('passwd', 'Password', 'trim|required|min_length[6]|xss_clean');
-        //TODO: The following are validation rules for address information
-        $this->form_validation->set_rules('addressLine1', 'Address Line 1', 'trim|required|xss_clean');
-        $this->form_validation->set_rules('addressLine2', 'Address Line 2', 'trim|xss_clean');
-        $this->form_validation->set_rules('city', 'City', 'trim|required|xss_clean');
-        $this->form_validation->set_rules('state', 'State', 'trim|required|xss_clean');
-        $this->form_validation->set_rules('country', 'Country', 'trim|required|xss_clean');
-        //TODO: The following is for the role
-        $this->form_validation->set_rules('role', 'Role', 'required');
-        //TODO: Run the validation
-        if ($this->form_validation->run() == FALSE) {
-            //TODO: This means it failed
-            $data['page_title'] = 'Membership registration';
-            $data['module'] = 'permissions';
-            $data['view_file'] = 'create_member';
-
-            echo Modules::run('templates/main_site', $data);
-        } else {
-            //TODO: call the model
-            $result = $this->user->create_user();
-            if ($result) {
-                //TODO: This means we were successful.Let's tell the user the good news
-                $data['page_title'] = 'Member Registration Success';
-                $data['module'] = 'permissions';
-                $data['view_file'] = 'create_user_success';
-                echo Modules::run('templates/main_site', $data);
-
-            }
-
-        }
-
-
-    }
+  
 
     /**
      * @param $userId

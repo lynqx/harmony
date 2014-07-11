@@ -17,20 +17,8 @@
     if (isset($data)) echo $data;
 
     ?></h6>
-<form name="create_message" id="create_message" method="post" action="message/create" enctype="multipart/form-data">
-    <div class="control-group">
-        <div class="controls">
-            <label class="control-label"><h6>Message Subject</h6></label>
+<form name="create_message" id="create_message" method="post" action="message/compose" enctype="multipart/form-data">
 
-            <div class="input-prepend">
-						            		<span class="add-on">
-                                            <span style="color:#F00">*</span>
-                                            <i class="ico-tag"></i>
-                                            </span>
-                <input id="prependedInput" type="text" name="subject" placeholder="Subject" class="input-xlarge"/>
-            </div>
-        </div>
-    </div>
     <div class="control-group">
         <div class="controls">
             <label class="control-label"><h6>Receipient</h6></label>
@@ -66,6 +54,21 @@
             </div>
         </div>
     </div>
+	
+	    <div class="control-group">
+        <div class="controls">
+            <label class="control-label"><h6>Message Subject</h6></label>
+
+            <div class="input-prepend">
+						            		<span class="add-on">
+                                            <span style="color:#F00">*</span>
+                                            <i class="ico-tag"></i>
+                                            </span>
+                <input id="prependedInput" type="text" name="subject" placeholder="Subject" class="input-xlarge"/>
+            </div>
+        </div>
+    </div>
+	
     <div class="control-group">
         <label class="control-label">Message Content</label>
 

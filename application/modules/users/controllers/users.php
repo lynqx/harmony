@@ -104,7 +104,7 @@ class Users extends MX_Controller
 					$lastname = $data['lastname'];
 					$image = $data['image'];
 
-                    	$this->load->view('users/member_view', $data);
+                    $this->load->view('users/member_view', $data);
 
 
 					
