@@ -48,6 +48,12 @@ define('CONTRIBUTION_CATEGORY','contribution');
 define('LOAN_CATEGORY','loan');
 define('RULE_SETTINGS_TABLE','rules_settings');
 define('COMMA_DELIMITER',',');
+//the following are for the settings module
+define('SETTINGS_TABLE','settings');
+define('KEY_COLUMN','key');
+define('VALUE_COLUMN','value');
+define('MODULES_ON','on');
+define('MODULES_OFF','off');
 
 /* End of file constants.php */
 /* Location: ./application/config/constants.php */
