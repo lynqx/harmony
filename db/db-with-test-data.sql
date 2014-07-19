@@ -488,16 +488,17 @@ CREATE TABLE IF NOT EXISTS `settings` (
   `key` varchar(255) DEFAULT NULL,
   `value` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
 
--- Dumping data for table armony.settings: ~3 rows (approximately)
+-- Dumping data for table armony.settings: ~5 rows (approximately)
 DELETE FROM `settings`;
 /*!40000 ALTER TABLE `settings` DISABLE KEYS */;
 INSERT INTO `settings` (`id`, `key`, `value`) VALUES
 	(1, 'self-service', 'on'),
 	(2, 'admin', 'on'),
 	(3, 'groups', 'on'),
-	(4, 'notifications', 'on');
+	(4, 'notifications', 'on'),
+	(5, 'message', 'on');
 /*!40000 ALTER TABLE `settings` ENABLE KEYS */;
 
 

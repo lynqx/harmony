@@ -12,69 +12,62 @@ class Notifications_model extends CI_Model
     {
         parent::__construct();
         $this->load->model('Sms_model');
+        $this->load->library('email');
     }
 
-    public function sendSMS($phoneNumbers,$message,$sender)
+    public function sendSMS($phoneNumbers, $message, $sender)
     {
         //expects an array of one or more phone numbers
-        $validNumbers=[];
-        $result='';
+        $validNumbers = [];
+        $result = '';
         //filter for numbers
-        if(is_array($phoneNumbers))
-        {
-            $validNumbers=array_filter($phoneNumbers,"phoneNumbersFilter");
+        if (is_array($phoneNumbers)) {
+            $validNumbers = array_filter($phoneNumbers, "phoneNumbersFilter");
         }
-        if(count($validNumbers)>0)
-        {
+        if (count($validNumbers) > 0) {
             //call sms handler
-            foreach($validNumbers as $number)
-            {
-                $result=$this->Sms_model->send($number,$message,$sender);
+            foreach ($validNumbers as $number) {
+                $result = $this->Sms_model->send($number, $message, $sender);
 
             }
             return $result;
         }
     }
 
-    public function sendEmail($emails)
+    public function sendEmail($emails, $subject, $message, $sender)
     {
         //expects an array of one or more emails
-    }
-
-    public function sendInternalMessage($recipients)
-    {
-        //expects an array of one or more cooperatorIds/userIds
-        if(count($recipients) > 0)
-        {
-
+        $filtered = array_filter($emails, "emailFilter");
+        if ($message != '' && $sender != '' && $subject != '') {
+            //send email
+            foreach ($filtered as $email) {
+                $this->email->clear();
+                $this->email->from($sender);
+                $this->email->to($email);
+                $this->email->subject($subject);
+                $this->email->message($message);
+                $this->email->send();
+            }
         }
-    }
-
-    public function sendMessage()
-    {
-
     }
 
     /**
-    //Filter call back functions for array_filter
+     * //Filter call back functions for array_filter
      **/
     private function phoneNumbersFilter($number)
     {
-        $filtered=filter_var($number,FILTER_SANITIZE_NUMBER_INT);
-        $filtered=filter_var($filtered,FILTER_VALIDATE_INT);
-        if(!is_false($filtered))
-        {
+        $filtered = filter_var($number, FILTER_SANITIZE_NUMBER_INT);
+        $filtered = filter_var($filtered, FILTER_VALIDATE_INT);
+        if (!is_false($filtered)) {
             return true;
-        }
-        else return false;
+        } else return false;
     }
+
     private function emailFilter($email)
     {
-        $filtered=filter_var($email,FILTER_VALIDATE_EMAIL);
-        if(!is_false($filtered))
-        {
+        $filtered = filter_var($email, FILTER_VALIDATE_EMAIL);
+        if (!is_false($filtered)) {
             return true;
-        }
-        else return false;
+        } else return false;
     }
 } 

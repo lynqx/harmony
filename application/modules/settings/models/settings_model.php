@@ -14,7 +14,7 @@ class Settings_model extends CI_Model
      * Some areas of concentration should be in the modules that have been turned on or off
      *
      */
-    var $modules = ['self-service', 'admin', 'groups','notifications']; //module keys
+    var $modules = ['self-service', 'admin', 'groups','notifications','message']; //module keys
 
     public function checkModuleIsOn($moduleName) //The module name is basically the key to be searched
     {

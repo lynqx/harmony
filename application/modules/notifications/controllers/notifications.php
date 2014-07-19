@@ -12,7 +12,7 @@ public function __construct()
     parent::__construct();
     $this->load->model('Notifications_model');
 }
-    public function sendMessage($type,$recipients,$message)
+    public function sendMessage($type,$recipients,$message,$subject='',$sender)
     {
         if(modules::run('settings/isModuleOn',NOTIFICATIONS_MODULE))
         {
@@ -21,13 +21,10 @@ public function __construct()
          switch($type)
          {
              case SMS_TYPE:
-                 return $this->Notifications_model->sendSMS($recipients,$message,NOTIFICATION_SENDER);
+                 return $this->Notifications_model->sendSMS($recipients,$message,$sender);
                  break;
              case EMAIL_TYPE:
-                 return $this->Notifications_model->sendEmail($recipients);
-                 break;
-             case INTERNAL_MESSAGE_TYPE:
-                 return $this->Notifications_model->sendInternalMessage($recipients);
+                 return $this->Notifications_model->sendEmail($recipients,$subject,$message,$sender);
                  break;
              default:
                  break;

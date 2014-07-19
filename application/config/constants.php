@@ -63,9 +63,7 @@ define('SMS_ADMIN_USERNAME','');
 define('SMS_ADMIN_PASS','');
 define('SMS_TYPE','sms');
 define('EMAIL_TYPE','email');
-define('INTERNAL_MESSAGE_TYPE','internal');
 define('NOTIFICATIONS_MODULE','notifications');
-define('NOTIFICATION_SENDER','Armony');
 define('SUCCESS_MESSAGE','success');
 define('FAILURE_MESSAGE','failed');
 
