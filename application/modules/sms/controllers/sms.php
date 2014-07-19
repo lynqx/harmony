@@ -56,7 +56,7 @@ not used, auth details from db.sms_admin table
                 $group = $this->input->post('group');
                 $country_code = '234';
 
-                $query = $this->db->query("SELECT users.id, users.mobile FROM `users` JOIN `groupmembers` on groupmembers.member_id = users.id
+                $query = $this->db->query("SELECT users.id, users.mobile FROM users JOIN groupmembers on groupmembers.member_id = users.id
 						WHERE groupmembers.group_id = '$group'");
 
 

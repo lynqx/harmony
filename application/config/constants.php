@@ -48,12 +48,26 @@ define('CONTRIBUTION_CATEGORY','contribution');
 define('LOAN_CATEGORY','loan');
 define('RULE_SETTINGS_TABLE','rules_settings');
 define('COMMA_DELIMITER',',');
-//the following are for the settings module
+
+//Settings Module configuration
 define('SETTINGS_TABLE','settings');
 define('KEY_COLUMN','key');
 define('VALUE_COLUMN','value');
 define('MODULES_ON','on');
 define('MODULES_OFF','off');
+define('MODULE_DEACTIVATED','Module Deactivated!');
+
+//Notifications/SMS Settings
+define('SMS_URL','http://www.nuobjects.com/nusms/');
+define('SMS_ADMIN_USERNAME','');
+define('SMS_ADMIN_PASS','');
+define('SMS_TYPE','sms');
+define('EMAIL_TYPE','email');
+define('INTERNAL_MESSAGE_TYPE','internal');
+define('NOTIFICATIONS_MODULE','notifications');
+define('NOTIFICATION_SENDER','Armony');
+define('SUCCESS_MESSAGE','success');
+define('FAILURE_MESSAGE','failed');
 
 /* End of file constants.php */
 /* Location: ./application/config/constants.php */

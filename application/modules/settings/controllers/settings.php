@@ -14,16 +14,27 @@ class Settings extends MX_Controller
         $this->load->model('Settings_model');
     }
 
+    /**
+     * @param $settingKey
+     * @return mixed
+     */
     public function getSetting($settingKey)
     {
         return $this->Settings_model->getSetting($settingKey);
     }
 
+    /**
+     * @param $moduleKey
+     * @return mixed
+     */
     public function isModuleOn($moduleKey)
     {
         return $this->Settings_model->checkModuleIsOn($moduleKey);
     }
 
+    /**
+     * @return mixed
+     */
     public function getActiveModules()
     {
         return $this->Settings_model->getActiveModules();
