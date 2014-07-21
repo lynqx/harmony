@@ -50,6 +50,7 @@
 
 </div>
 
+
 <!-- /sidebar user overview statistics -->
 <!-- / inject permission to make it seen by only administrators -->
 <?php if (modules::run('permissions/isPermitted', $this->session->userdata("username"), "canViewAdmin") == "permitted") {
@@ -315,13 +316,8 @@
             <h6 class="widget-name"><i class="ico-envelope"></i><b>Company Email</b> <br/>
                     <span style="font-size:12px">
 					<?php
-                    foreach ($settings as $setting) {
-                    $email = $setting->email;
-                    $phone = $setting->phone;
-                    $address = $setting->address;
-
-                    echo $email;
-
+                    $email=modules::run('settings/getSetting', "email");
+					echo $email->value;
                     ?>
                     </span>
             </h6>
@@ -330,7 +326,10 @@
         <div>
             <h6 class="widget-name"><i class="icon-phone"></i><b>Company Phone</b> <br/>
                     <span style="font-size:12px">
-				 <?php echo $phone; ?>
+					<?php 
+					$phone=modules::run('settings/getSetting', "mobile");
+					echo $phone->value;
+					?>
 					
                     </span>
             </h6>
@@ -339,10 +338,10 @@
         <div>
             <h6 class="widget-name"><i class="ico-home"></i><b>Company Address</b> <br/>
                     <span style="font-size:12px">
-					<?php
-                    echo $address;
-                    }
-                    ?>
+                    <?php 
+					$address=modules::run('settings/getSetting', "address");
+					echo $address->value;
+					?>
                     </span>
             </h6>
         </div>

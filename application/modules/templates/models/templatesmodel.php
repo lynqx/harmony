@@ -128,40 +128,6 @@ class TemplatesModel extends CI_Model {
 	
 		}
 		
-		
-		function get_sitelogo() {
-					
-			 //actual results query
-			 $query = $this->db->select('*')
-			->from('sitelogo');
-			$result['rows'] = $query->get()->result();	
-			
-			return $result;	
-
-			}
-		
-		
-		function get_settings() {
-					
-			 //actual results query
-			 $query = $this->db->select('companyname, shortname, email, phone, address')
-			->from('basicsettings');
-			$result['rows'] = $query->get()->result();	
-			
-			return $result;	
-
-			}
-			
-			function get_display_settings() {
-					
-			 //actual results query
-			 $query = $this->db->select('*')
-			->from('toggledisplay');
-			$result['rows'] = $query->get()->result();	
-			
-			return $result;	
-
-			}
 			
 			
 }

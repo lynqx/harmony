@@ -31,24 +31,16 @@
 
     <!------------ site favicon logo ---------->
     <?php
-
-    foreach ($displays as $display) {
-        $fav = $display->favicon;
-        if ($fav == 1) {
-
-            foreach ($logos as $sitelogo) {
-                $favicon = $sitelogo->favicon;
-                ?>
-
-                <link rel="shortcut icon" href="<?php echo base_url() . 'img/' . $favicon; ?>"/>
-
-            <?php
-            }
-        }
-    }
-    ?>
-
-
+  
+		$showfav=modules::run('settings/getSetting', "show_favicon"); 
+		if(isset($showfav->value) && $showfav->value == "on") { 
+		
+		$fav=modules::run('settings/getSetting', "favicon");
+			echo '<link rel="shortcut icon" href="' . base_url() . 'img/' . $fav->value . '"/>';
+				//echo '<p title="" class="sitename">' . $sitename->value . '</p>'; 
+		}
+		?>
+		
    <link href="<?php echo base_url(); ?>css/main.css" rel="stylesheet" type="text/css"/>
     
     
@@ -143,56 +135,30 @@
     <div class="fixed">
         <!------------display site logo ---------->
         <?php
-
-
-        // allowed to use logo on site ?
-        foreach ($displays as $display) {
-            $logo = $display->logo;
-            $defaultlogo = $display->defaultlogo;
-
-
-            if ($logo == 1) {
-
-                // which logo to use, uploaded or default
-                if ($defaultlogo == 1) {
-                    ?>
-
-                    <a href="index.html" title="" class="logo">
-                        <?php
-                        foreach ($logos as $sitelogo) {
-                            $logo = $sitelogo->logo;
-                            echo '<img src="' . base_url() . 'img/' . $logo . '" alt="" />';
-                        }
-                        ?>
-                    </a>
-                <?php
-                } else {
+		//determine if to use use uploaded logo or default logo
+		$showlogo=modules::run('settings/getSetting', "show_logo"); 
+		if(isset($showlogo->value) && $showlogo->value == "on") { 
+		
+		$image=modules::run('settings/getSetting', "logo");
+		echo $logo = $image->value;
+		echo '<img src="' . base_url() . 'img/' . $logo . '" alt="" />';
+ 
+		} else {
                     echo '<a href="index.html" title="" class="logo"><img src="' . base_url() . 'img/defaultlogo.png" alt="" /></a>';
-                }
-            }
-        }
-        ?>
+        
+		}
+		?>
 
         <!------------display site name ---------->
-        <?php
+        <?php   
+		$showsitename=modules::run('settings/getSetting', "show_sitename"); 
+		if(isset($showsitename->value) && $showsitename->value == "on") { 
+		
+		$sitename=modules::run('settings/getSetting', "sitename");
+				echo '<p title="" class="sitename">' . $sitename->value . '</p>'; 
+		}
+		?>
 
-        foreach ($settings as $setting) {
-
-
-        $companyname = $setting->companyname;
-        $shortname = $setting->shortname;
-        ?>
-
-        <p title="" class="sitename"> <?php
-            foreach ($displays as $display) {
-                $sitename = $display->sitename;
-
-                if ($sitename == 1) {
-
-                    echo $companyname;
-                }
-            }
-            } ?></p>
 
         <?php $id = $this->session->userdata('id'); ?>
 
@@ -219,7 +185,6 @@
 
 
             <?php // Create a login/logout link:
-            //if(!isset($is_logged_in) || $is_logged_in != true) {
 
             if ($this->session->userdata('username')) {
                 ?>

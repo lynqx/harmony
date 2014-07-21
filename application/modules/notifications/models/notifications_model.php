@@ -17,7 +17,10 @@ class Notifications_model extends CI_Model
 
     public function sendSMS($phoneNumbers, $message, $sender)
     {
-        //expects an array of one or more phone numbers
+	// pls note that i had to comment this part out before it worked, cant tell why ?!
+	// but i guess, maybe its because its just a single mobile number
+	
+        /*expects an array of one or more phone numbers
         $validNumbers = [];
         $result = '';
         //filter for numbers
@@ -27,11 +30,12 @@ class Notifications_model extends CI_Model
         if (count($validNumbers) > 0) {
             //call sms handler
             foreach ($validNumbers as $number) {
-                $result = $this->Sms_model->send($number, $message, $sender);
+			*/
+                $result = $this->Sms_model->send($phoneNumbers, $message, $sender);
 
-            }
+            //}
             return $result;
-        }
+        //}
     }
 
     public function sendEmail($emails, $subject, $message, $sender)
@@ -70,4 +74,8 @@ class Notifications_model extends CI_Model
             return true;
         } else return false;
     }
+	
+	
+	
+
 } 

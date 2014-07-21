@@ -38,8 +38,6 @@
 |
 */
 // route because of third segment
-//$route['userview/userview/(:any)'] = 'userview/index/$1';
-//$route['userview/(:any)'] = 'userview/index/$1';
 
 $route['profile/profile/(:any)'] = 'profile/index/$1';
 $route['profile/(:any)'] = 'profile/index/$1';
@@ -47,7 +45,9 @@ $route['profile/(:any)'] = 'profile/index/$1';
 $route['pages/pages/(:any)'] = 'pages/index/$1';
 $route['pages/(:any)'] = 'pages/index/$1';
 
-$route['default_controller'] = "home/pages";
+$route['admin'] = 'pages/admin';
+
+$route['default_controller'] = "pages/home";
 $route['404_override'] = '';
 
 

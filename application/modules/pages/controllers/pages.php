@@ -4,6 +4,48 @@
 class Pages extends MX_Controller
 {
 
+/* major homepage of the app
+redirects depending on user permission
+and if modules is turned on or not
+*/
+public function home() 
+    {
+
+	$user = $this->session->userdata("username");
+        if ($user != false) {
+            if (modules::run('permissions/isPermitted', $this->session->userdata("username"), "canViewMember") == "permitted") {
+                redirect('/selfservice');
+            } else if (modules::run('permissions/isPermitted', $this->session->userdata("username"), "canViewAdmin") == "permitted") {
+                redirect('/admin');
+            }
+        }
+		
+        $data['page_title'] = 'Armony';
+        $data['module'] = 'pages';
+        $data['view_file'] = 'main_page';
+
+        echo Modules::run('templates/main_site', $data);
+    }
+	
+	
+	 public function admin()
+    {
+	
+			Modules::run('login/is_logged_in');
+			if (modules::run('permissions/isPermitted', $this->session->userdata("username"), "canViewAdmin") != "permitted") {
+            redirect('/');
+			}
+			
+
+        $data['page_title'] = 'Administrator';
+        $data['module'] = 'pages';
+        $data['view_file'] = 'admin_area';
+
+        echo Modules::run('templates/main_site', $data);
+    }
+	
+	
+	
     public function index($slug)
     {
 
@@ -54,6 +96,6 @@ class Pages extends MX_Controller
 			
 	}
 	
-	
+		
 
 }

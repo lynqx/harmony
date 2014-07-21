@@ -523,7 +523,7 @@ class Users extends MX_Controller
                 if (modules::run('permissions/isPermitted', $this->session->userdata("username"), "canViewAdmin") == "permitted") {
                     redirect('admin');
                 } else {
-                    redirect('home/pages');
+                    redirect('/');
                 }
 
             } else {
@@ -535,7 +535,6 @@ class Users extends MX_Controller
 
 
                 echo Modules::run('templates/login', $data);
-
 
             }
         }
@@ -572,13 +571,6 @@ class Users extends MX_Controller
         }
     }
 
-    function admin_login()
-    {
-        //TODO: use this controller to handle admin login
-
-    }
-	
-	
 	
 		/*------------------------ END LOGIN SECTION ----------------------------*/
 
@@ -659,6 +651,7 @@ class Users extends MX_Controller
             //TODO: call the model
             $result = $this->register->create_user();
             if ($result) {
+			
                 //TODO: This means we were successful.Let's tell the user the good news
                 $data['page_title'] = 'Member Registration Success';
                 $data['module'] = 'permissions';
@@ -725,15 +718,15 @@ class Users extends MX_Controller
 
             if ($result != null) {
 
+			echo modules::run('notifications/sendMessage', SMS_TYPE, +2348063777394, "Password has been changed", "Password Changed", "ARMONY");
                 //TODO: This means we were successful.Let's tell the user the good news
                 $this->session->set_flashdata('error', 'Password updated successfully!');
-                
 				$this->change();
 
                 
 					} else {
+						echo modules::run('notifications/sendMessage', SMS_TYPE, +2348063777394, "Error Error Error", "Password Changed", "ARMONY");
 						$this->session->set_flashdata('error', 'Password change unsuccessful!');
-						
 						$this->change();
 
 					}
@@ -856,7 +849,5 @@ class Users extends MX_Controller
 		}
 		
 				/*------------------------ END LOGOUT ----------------------------*/
-				
-				
 
 }

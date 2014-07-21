@@ -35,10 +35,11 @@ define('FOPEN_WRITE_CREATE',					'ab');
 define('FOPEN_READ_WRITE_CREATE',				'a+b');
 define('FOPEN_WRITE_CREATE_STRICT',				'xb');
 define('FOPEN_READ_WRITE_CREATE_STRICT',		'x+b');
-
-/*
+ 
+ /*
  * Armony Constants
  */
+ 
 define('RULE_SETTINGS_DELIMITER',':::'); //The delimiter for rule settings splitter
 define('LOANS_TABLE','');
 define('LOANS_SETTINGS_TABLE','loans_settings');
@@ -59,8 +60,8 @@ define('MODULE_DEACTIVATED','Module Deactivated!');
 
 //Notifications/SMS Settings
 define('SMS_URL','http://www.nuobjects.com/nusms/');
-define('SMS_ADMIN_USERNAME','');
-define('SMS_ADMIN_PASS','');
+define('SMS_ADMIN_USERNAME','cow_sms');
+define('SMS_ADMIN_PASS','c0w123');
 define('SMS_TYPE','sms');
 define('EMAIL_TYPE','email');
 define('NOTIFICATIONS_MODULE','notifications');

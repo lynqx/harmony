@@ -34,4 +34,17 @@ public function __construct()
     }
         else echo MODULE_DEACTIVATED;
     }
+	
+	public function index() 
+	{
+		//this works fine
+		// change the mobile number to urs wen testing
+		echo $this->Notifications_model->sendSMS('+2348063777394', 'Password to an emotionally unstable person', 'ORACLE');
+		
+		
+		//this does not work
+		//echo modules::run('notifications/sendMessage', 'sms', '+2348063777394', 'Password to an emotionally unstable person', 'subject', 'ORACLE');
+
+							
+	}
 } 

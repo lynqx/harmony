@@ -28,12 +28,14 @@
 			}
 					?> ||
                     
-                    <?php
-				  foreach ($settings as $setting) { 
-                  $shortname = $setting->shortname;
-				  echo $shortname;
-					}
-				  ?>
+                   <?php   
+		$showfooter=modules::run('settings/getSetting', "show_footer"); 
+		if(isset($showfooter->value) && $showfooter->value == "on") { 
+		
+		$footername=modules::run('settings/getSetting', "footername");
+				echo $footername->value; 
+		}
+		?>
 				   || All rights reserved <br />       
 		
          </div>

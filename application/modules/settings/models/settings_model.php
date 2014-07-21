@@ -21,7 +21,7 @@ class Settings_model extends CI_Model
         $result = $this->getSetting($moduleName); //calls the get settings methods
         //Check the result to see if the module is on or off
 
-        if (!is_null($result) && $result->value == 1) {
+        if (!is_null($result) && $result->value == 'on') {
             return true;
         } else return false;
 

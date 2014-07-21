@@ -41,17 +41,7 @@ if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
             $data['menus'] = $menu['rows'];
             $data['num_menu'] = $menu['num_rows'];
-		
-		
-		//begin: to get site wide settings
-            $query = $this->templatesmodel->get_sitelogo();
-            $data['logos'] = $query['rows'];
-			
-			$query = $this->templatesmodel->get_settings();
-            $data['settings'] = $query['rows'];
-			
-			$sub = $this->templatesmodel->get_display_settings();
-            $data['displays'] = $sub['rows'];
+
 
             //end: to get menu for features in sidebar
 
