@@ -35,7 +35,7 @@ class Rules_model extends CI_Model
 
             case LOAN_CATEGORY:
 
-                $this->db->select('loans_rules.rule_id,rules.title,rule_definitions.rules_def,rule_definitions.require_settings')
+                $this->db->select('rules.id,loans_rules.rule_title,rules.title,rule_definitions.rules_def,rule_definitions.require_settings,rules.description')
                     ->from('loans_rules')
                     ->join('rules', 'rules.title=loans_rules.rule_title')
                     ->join('rule_definitions', 'rule_definitions.rule_title=loans_rules.rule_title')
@@ -46,7 +46,7 @@ class Rules_model extends CI_Model
                 break;
 
             case CONTRIBUTION_CATEGORY:
-                $this->db->select('contributions_rules.rule_id,rule_definitions.rules_def,rule_definitions.require_settings')
+                $this->db->select('contributions_rules.rule_title,rule_definitions.rules_def,rule_definitions.require_settings,rules.description,rules.id')
                     ->from('contributions_rules')
                     ->join('rules', 'rules.title=contributions_rules.rule_title')
                     ->join('rule_definitions', 'rule_definitions.rule_title=contributions_rules.rule_title')
@@ -74,17 +74,19 @@ class Rules_model extends CI_Model
             $user=$user_model->getCurrentUser(); //TODO: Seek alternate means to suppose admin powered operations
             foreach ($rule_set as $rule) {
 
-                $category=$rule->getCategory;
+                $category=$rule->getCategory();
 
-                if (is_null($this->_checkRuleSettings($category,$rule->getRuleID))) {
-                    $query=$this->db->query($rule->rules_def,$user->Id);
+                if (is_null($this->_checkRuleSettings($category,$rule->getRuleID()))) {
+                    echo 'no setings';
+                    $query=$this->db->query($rule->getDefinition(),$user->Id);
                     $result=$query->row(); //expect to return a true or false value from script execution
                     $resultSet->addResultToSet($result);
                 }
-                else if(!is_null($this->_checkRuleSettings($category,$rule->getRuleID)))
+                else if(!is_null($this->_checkRuleSettings($category,$rule->getRuleID())))
                 {
-                    $settings=$this->_checkRuleSettings($category,$rule->getRuleID);
-                    $query=$this->db->query($rule->rules_def,$settings);
+                    //echo 'settings';
+                    $settings=$this->_checkRuleSettings($category,$rule->getRuleID());
+                    $query=$this->db->query($rule->getDefinition(),$settings);
                     $result=$query->row(); //returns true or false
                     $resultSet->addResultToSet($result);
                 }
@@ -122,7 +124,7 @@ class Rules_model extends CI_Model
                     //TODO: Add implementation for when self service is turned off
                     $user_model=new User_model();
                     $user=$user_model->getCurrentUser();
-                    $settings[]=$user->Id;
+                    $settings[]=1;//$user->Id; TODO: Remember to reactivate before deployment
                     return $settings;
                 }
                 else return null;
@@ -143,7 +145,7 @@ class Rules_model extends CI_Model
                     //TODO: Add implementation for when self service is turned off
                     $user_model=new User_model();
                     $user=$user_model->getCurrentUser();
-                    $settings[]=$user->Id;
+                    $settings[]=1;//$user->Id;
                     return $settings;
                 }
                  else return null;
@@ -161,9 +163,9 @@ class Rules_model extends CI_Model
             foreach ($ruleArray as $singleRule) {
                 $rule = new Rule_model();
                 $rule->setCategory($ruletype);
-                $rule->setTitle($singleRule->title);
+                $rule->setTitle($singleRule->rule_title);
                 $rule->setDefinition($singleRule->rules_def);
-                $rule->setRuleID($singleRule->rule_id);
+                $rule->setRuleID($singleRule->id);
                 $rule->setDescription($singleRule->description);
                 $rule->setRequireSettings($singleRule->require_settings);
                 $ruleSet->addRuleToSet($rule);
