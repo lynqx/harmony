@@ -221,6 +221,14 @@ class Rules_model extends CI_Model
                         return true;
                     }
                     else return false;
+                case LOAN_CATEGORY:
+                    $insertData=array("loan_id"=>$Id,"value"=>$mergedTotal);
+                    $this->db->insert(LOANS_SETTINGS_TABLE,$insertData);
+                    if($this->db->insert_id() > 0)
+                    {
+                        return true;
+                    }
+                    else return false;
         }
         }
 
@@ -230,7 +238,7 @@ class Rules_model extends CI_Model
         //checks
         if($ruleId>0 && !is_null($settingValue))
         {
-            //peform merge
+            //perform merge
             $merged=$ruleId.RULE_SETTINGS_DELIMITER.$settingValue;
             return $merged;
         }

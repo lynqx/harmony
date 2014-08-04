@@ -11,7 +11,7 @@
 |	http://example.com/
 |
 */
-$config['base_url'] = "http://localhost/harmony/";
+$config['base_url'] = "http://localhost/armony/";
 
 /*
 |--------------------------------------------------------------------------
